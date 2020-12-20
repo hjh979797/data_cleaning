@@ -1,0 +1,221 @@
+// 结构样式和行为
+<template>
+  <div class="regist_container">
+    <div class="top"></div>
+    <div class="regist_box">
+      <!-- 头像区域
+      <div class="avatar_box">
+        <img src="../../assets/logo.png" alt=""/>
+      </div> -->
+      <!-- 左边图 -->
+      <div class="regist_left">
+        <div class="left_back"></div>
+        <label class="left_text">数据清洗平台</label>
+        <img src="../../assets/login_2.png" alt="" class="left_pic">
+      </div>
+      <!-- 右边 -->
+      <div class="regist_right">
+        <div class="right_welcome">
+          <label>欢迎注册</label>
+          <div class="line"> </div>
+        </div>
+        <!-- 登录表单区域 -->
+        <el-form :model="registForm" :rules="registFormRules" label-width="0px" class="regist_form" ref="registFormRef">
+          <div class="in">
+            <!-- 用户名 -->
+            <el-form-item style="margin: 10px" prop="username">
+              <el-input prefix-icon="iconfont icon-user" v-model="registForm.username" placeholder="请输入账号" size="mini"></el-input>
+            </el-form-item>
+            <!-- 密码 -->
+            <el-form-item style="margin: 10px" prop="password">
+              <el-input prefix-icon="iconfont icon-3702mima" v-model="registForm.password" type="password" placeholder="请输入密码" size="mini"></el-input>
+            </el-form-item>
+            <!-- 再次输入密码 -->
+            <el-form-item style="margin: 10px" prop="repassword">
+              <el-input prefix-icon="iconfont icon-3702mima" v-model="registForm.repassword" type="password" placeholder="重新输入密码" size="mini"></el-input>
+            </el-form-item>
+          </div>
+          <!-- 按钮区域 -->
+          <el-button type="primary" class="regist" @click="regist">注 册</el-button>
+          <!-- <el-form-item class="btns"> -->
+            <!-- <el-button type="info">重置</el-button> -->
+          <!-- </el-form-item> -->
+        </el-form>
+        <div class="toback">
+          <router-link to="/login">返回</router-link>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data(){
+    var validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.registForm.password) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
+    return{
+      // 登录表单的数据绑定对象
+      registForm:{
+        username: 'hjh',  //数据绑定
+        password: 'mima',
+        repassword: ''
+      },
+      registFormRules:{
+        // 验证用户名合法性
+        username:[
+          {required: true, message: "请输入用户名", trigger: "blur"},
+          {min: 3, max: 10, message: "长度在3-10个字符之间", trigger: "blur"}
+        ],
+        // 验证密码合法性
+        password:[
+          {required: true, message: "请输入登录密码", trigger: "blur"},
+          {min: 6, max: 15, message: "长度在6-15个字符之间", trigger: "blur"}
+        ],
+        repassword:[
+          { validator: validatePass2, trigger: 'blur' }
+        ]
+
+      }
+    }
+  },
+  methods: {
+    regist() {
+      this.$refs.registFormRef.validate(async valid => {
+        if(!valid) return;
+        const {data: res} = await this.$http.post('regist', this.registForm);
+        if(res.meta.status !== 200) return console.log('注册失败')
+        console.log('注册成功')
+        console.log(res)
+      })
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.regist_container {
+  background: url('../../assets/login_back_1.jpg') no-repeat;
+  background-size: 100% 100%;
+  height: 100%;
+  .top{
+    height: 100%;
+    width: 100%;
+    background-color: #2b3f6b;
+    filter: Alpha(Opacity=60);
+    opacity: 0.6;
+  }
+}
+.regist_box{
+  width: 600px;
+  height: 330px;
+  border-radius: 3px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+}
+.avatar_box{
+  height: 130px;
+  width: 130px;
+  border: 1px solid #eee;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 0 10px #ddd;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  img{
+    widows: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #eee;
+  }
+}
+.regist_left{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40%;
+  height: 100%;
+  .left_back{
+    width: 100%;
+    height: 100%;
+    background-color: #3366CC;
+    opacity: 0.9; // 透明度
+  }
+  .left_text{
+    color: #fff;  //字体颜色
+    font-size: 18px;
+    position: absolute;
+    bottom: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .left_pic{
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translate(-50%);
+    width: 80%;
+    height: 40%;
+  }
+}
+.regist_right{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 60%;
+  height: 100%;
+  background-color: #fff;
+  .right_welcome{
+    position: absolute;
+    left: 50%;
+    top: 15%;
+    transform: translate(-50%);
+    font-size: 15px;
+    font-family: "Hiragino Sans GB";
+    font-weight: bold;
+  }
+  .line{
+    border: 0px;
+    height: 1px;
+    margin-top: 5px;
+    background: #A8BEE5;
+    background-image: linear-gradient(to right, #ccc, #A8BEE5, #ccc);
+  }
+}
+.regist_form{
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  width: 80%;
+}
+.btns{
+  display: flex;
+  justify-content: flex-end;
+}
+.regist{
+  width: 100%;
+  background-color: #3366CC;
+  margin-top: 10px;
+}
+.toback{
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translate(-50%);
+  font-size: 8px;
+}
+</style>
