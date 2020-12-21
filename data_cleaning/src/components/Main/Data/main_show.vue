@@ -26,7 +26,7 @@
       <el-main>
         <!-- 数据显示 -->
         <el-table
-          :data="tableData"
+          :data="dataList"
           stripe
           border
           height="100%"
@@ -57,7 +57,7 @@
           :page-sizes="[1, 2, 5, 10]"
           :page-size="queryInfo.pagesize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400">
+          :total="totalData">
         </el-pagination>
       </el-footer>
   </el-container>
@@ -74,8 +74,8 @@ export default {
         // 当前每页显示多少数据
         pagesize: 2
       },
-      total: 0,
-      tableData: [{
+      totalData: 100,
+      dataList: [{
         date: '2016-05-02',
         name: '王小虎',
         address: '上海市普陀区金沙江路 1518 弄'
@@ -126,14 +126,29 @@ export default {
       }]
     }
   },
+  // 生命周期函数，创建时候加载数据
+  created () {
+    // this.getDataList()
+  },
   methods: {
+    async getDataList() {
+      const {data : res} = await this.$http.get('dataId', { params: this.queryInfo })
+      console.log(res)
+      if(res.meta.status !== 200) return this.$message.error(" 获取数据失败 ")
+      this.dataList = res.data.datas
+      this.totalData = res.data.total
+    },
+    // 监听 pageSize 改变的事件
     handleSizeChange(newSize) {
       console.log(`每页 ${newsize} 条`)
       this.queryInfo.pagesize = newSize
+      // this.getDataList()
     },
+    // 监听 页码值 改变的事件
     handleCurrentChange(newPage) {
       console.log(`当前页: ${newPage}`)
       this.queryInfo.pagenum = newPage
+      // this.getDataList()
     }
   }
 }
@@ -157,7 +172,7 @@ export default {
     margin-bottom: 15px;
   }
   .el-main {
-    width: 100%;
+    width: 90%;
     padding: 15px;
   }
 }
