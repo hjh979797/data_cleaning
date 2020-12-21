@@ -20,11 +20,11 @@
           <!-- 页面主体 -->
           <el-container>
             <!-- 侧边栏 -->
-            <el-aside width="250px">
+            <el-aside width="300px">
               <!-- 侧边栏按钮 -->
               <div class="btns">
-                <el-button type="primary" size="small" @click="create_pro"><i class="el-icon-circle-plus el-icon--left"></i>创建项目</el-button>
-                <el-button type="primary" size="small" @click="create_data"><i class="el-icon-upload el-icon--left"></i>导入数据</el-button>
+                <el-button type="primary" size="medium" @click="create_pro"><i class="el-icon-circle-plus el-icon--left"></i>创建项目</el-button>
+                <el-button type="primary" size="medium" @click="create_data"><i class="el-icon-upload el-icon--left"></i>导入数据</el-button>
               </div>
               <!-- 侧边栏菜单区 -->
               <!-- 最后开起路由模式,根据index跳 -->
@@ -35,23 +35,50 @@
                 unique-opened
                 router
               >
-                <!-- 一级菜单 -->
-                <el-submenu :index="item.id + ''" v-for="item in menulist" :key="item.id">
-                  <template slot="title">
-                    <i class="el-icon-more"></i>
-                    <span>{{ item.proName }}</span>
-                  </template>
-                  <!-- 二级菜单 -->
-                  <el-menu-item-group>
-                    <!-- <el-menu-item index="/datain" v-for="subItem in item.children" :key="subItem.id"> -->
-                    <el-menu-item :index="subItem.id+''" v-for="subItem in item.children" :key="subItem.id">
-                      <template slot="title">
-                      <i class="el-icon-more"></i>
-                      <span>{{ subItem.dataName }}</span>
+                <div class="menuone" v-for="item in prolist" :key="item.id">
+                  <!-- 一级菜单 -->
+                  <el-dropdown trigger="click">
+                    <span class="el-dropdown-link">
+                      <el-button type="text" icon="el-icon-more"></el-button>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item>重命名</el-dropdown-item>
+                      <el-dropdown-item>删除</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                  <el-submenu :index="item.id + ''">
+                    <template slot="title">
+                      <!-- <el-button 
+                        type="text" 
+                        size="mini" 
+                        icon="el-icon-more" 
+                        @click="opra">
+                      </el-button> -->
+                      <span>{{ item.proName }}</span>
                     </template>
-                    </el-menu-item>
-                  </el-menu-item-group>
-                </el-submenu>
+                    <!-- 二级菜单 -->
+                    <el-menu-item-group>
+                      <!-- <el-menu-item index="/datain" v-for="subItem in item.children" :key="subItem.id"> -->
+                      <div class="menutwo" v-for="subItem in item.children" :key="subItem.id">
+                        <el-dropdown trigger="click">
+                          <span class="el-dropdown-link">
+                            <el-button type="text" icon="el-icon-more"></el-button>
+                          </span>
+                          <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>重命名</el-dropdown-item>
+                            <el-dropdown-item>删除</el-dropdown-item>
+                          </el-dropdown-menu>
+                        </el-dropdown>
+                        <el-menu-item :index="subItem.id+''">
+                          <template slot="title">
+                          <span>{{ subItem.dataName }}</span>
+                        </template>
+                        </el-menu-item>
+                      </div>
+                    </el-menu-item-group>
+                  </el-submenu>
+                </div>
+
               </el-menu>
             </el-aside>
             <!-- 内容 -->
@@ -70,7 +97,7 @@ export default {
   data() {
     return{
       //左侧菜单数据
-      menulist: [
+      prolist: [
         {id:"1", proName:"项目一", children:[
           {id:"1", dataName:"数据一"},
           {id:"2", dataName:"数据二"}
@@ -85,7 +112,9 @@ export default {
         ]}
       ],
       // 用户名
-      username: 'admin'
+      username: 'admin',
+      // 是开关按下
+      isbutton: false
     }
   },
   // 生命周期函数，加载菜单栏信息
@@ -104,6 +133,9 @@ export default {
     },
     create_data() {
         this.$router.push('/datain')
+    },
+    opra() {
+      
     }
   }
 }
@@ -176,39 +208,30 @@ export default {
   display: flex;
   justify-content: flex-start;
 }
-// .home_container {
-//   background: url('../../assets/login_back_1.jpg') no-repeat;
-//   background-size: 100% 100%;
-//   height: 100%;
-//   .top {
-//     height: 100%;
-//     width: 100%;
-//     background-color: #2b3f6b;
-//     filter: Alpha(Opacity=60);
-//     opacity: 0.6;
-//   }
-// }
-// .left-view {
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   width: 20%;
-//   height: 100%;
-//   .btns {
-//     width: 100%;
-//     margin: 10px;
-//     display: flex;
-//     justify-content: flex-start;
-//   }
-//   .left-menu {
-//     width: 100%;
-//   }
-// }
-// .right-view {
-//   position: absolute;
-//   top: 0;
-//   left: 30%;
-//   width: 100%;
-//   height: 100%;
-// }
+.menuone {
+  display: flex;
+  flex-flow: row;
+  .el-dropdown {
+    width: 10%;
+    height: 20px;
+    margin: 10px;
+    margin-right: 0px;
+  }
+  .el-submenu {
+    width: 90%;
+  }
+}
+.menutwo{
+  display: flex;
+  flex-flow: row;
+  .el-dropdown {
+    width: 10%;
+    height: 20px;
+    margin: 5px;
+    margin-right: 0px;
+  }
+  .el-menu-item {
+    width: 90%;
+  }
+}
 </style>
