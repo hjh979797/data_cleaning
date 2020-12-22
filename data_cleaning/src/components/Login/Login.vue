@@ -3,10 +3,6 @@
   <div class="login_container">
     <div class="top"></div>
     <div class="login_box">
-      <!-- 头像区域
-      <div class="avatar_box">
-        <img src="../../assets/logo.png" alt=""/>
-      </div> -->
       <!-- 左边图 -->
       <div class="login_left">
         <div class="left_back"></div>
@@ -29,10 +25,10 @@
         >
           <div class="in">
             <!-- 用户名 -->
-            <el-form-item style="margin: 10px" prop="username">
+            <el-form-item style="margin: 10px" prop="mail">
               <el-input
                 prefix-icon="iconfont icon-user"
-                v-model="loginForm.username"
+                v-model="loginForm.mail"
                 placeholder="请输入账号"
                 size="mini"
               ></el-input>
@@ -52,9 +48,6 @@
           <el-button type="primary" class="login" @click="login"
             >登 录</el-button
           >
-          <!-- <el-form-item class="btns"> -->
-          <!-- <el-button type="info">重置</el-button> -->
-          <!-- </el-form-item> -->
         </el-form>
         <div class="zhuce">
           <label>没有账号?</label>
@@ -72,14 +65,14 @@ export default {
     return {
       // 登录表单的数据绑定对象
       loginForm: {
-        username: 'admin', //数据绑定
+        mail: '848564778@qq.com', //数据绑定
         password: '123456'
       },
       loginFormRules: {
-        // 验证用户名合法性
-        username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在3-10个字符之间', trigger: 'blur' }
+        // 验证邮箱合法性-------------------------------------------
+        mail: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          { min: 3, max: 50, message: '长度在3-50个字符之间', trigger: 'blur' }
         ],
         // 验证密码合法性
         password: [
@@ -93,12 +86,17 @@ export default {
     login() {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
-        // const {data: res} = await this.$http.post('login', this.loginForm);
-        // if(res.meta.status !== 200) return this.$message.error("登录失败!")
-        console.log('登录成功')
+        const {data: res} = await this.$http.post('/login', this.loginForm);
+        console.log(res.code) // 代号
+        console.log(res.data) // token
+        console.log(res.msg)  // 错误原因
+        if(res.code !== 0) return this.$message.error("登录失败!" + res.msg)
         this.$message.success('登录成功')
-        // console.log(res)
-        // window.sessionStorage.setItem("token", res.data.token);
+        window.sessionStorage.setItem("token", res.data);
+        this.$store.dispatch("setUserInfo", {
+          mail: this.loginForm.mail,
+          padssword: this.loginForm.password
+        })
         this.$router.push('/home')
       })
     }
@@ -110,7 +108,6 @@ export default {
 .login_container {
   background: url('../../assets/login_back_1.jpg') no-repeat;
   background-size: 100% 100%;
-  // background-color: #2b4b6b;
   height: 100%;
   .top {
     height: 100%;

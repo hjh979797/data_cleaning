@@ -13,10 +13,10 @@
             <el-button
               type="text"
               size="medium"
-              v-model="username"
+              v-model="this.$store.getters.getMail"
               icon="iconfont icon-user"
               class="info"
-              >{{ ' ' + username }}</el-button>
+              >{{ ' ' + this.$store.getters.getMail }}</el-button>
           </el-header>
           
           <el-main  class="home-main">
@@ -44,7 +44,6 @@
 export default {
   data() {
     return{
-      username: 'admin'
     }
   }
 }

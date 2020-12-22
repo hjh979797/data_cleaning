@@ -12,10 +12,10 @@
             <el-button
               type="text"
               size="medium"
-              v-model="username"
+              v-model="this.$store.getters.getMail"
               icon="iconfont icon-user"
               class="info"
-              >{{ ' ' + username }}</el-button>
+              >{{ ' ' + this.$store.getters.getMail }}</el-button>
           </el-header>
           <!-- 页面主体 -->
           <el-container>
@@ -48,17 +48,10 @@
                   </el-dropdown>
                   <el-submenu :index="item.id + ''">
                     <template slot="title">
-                      <!-- <el-button 
-                        type="text" 
-                        size="mini" 
-                        icon="el-icon-more" 
-                        @click="opra">
-                      </el-button> -->
                       <span>{{ item.proName }}</span>
                     </template>
                     <!-- 二级菜单 -->
                     <el-menu-item-group>
-                      <!-- <el-menu-item index="/datain" v-for="subItem in item.children" :key="subItem.id"> -->
                       <div class="menutwo" v-for="subItem in item.children" :key="subItem.id">
                         <el-dropdown trigger="click">
                           <span class="el-dropdown-link">
@@ -69,7 +62,8 @@
                             <el-dropdown-item>删除</el-dropdown-item>
                           </el-dropdown-menu>
                         </el-dropdown>
-                        <el-menu-item :index="subItem.id+''">
+                        <!-- index指向去处 -->
+                        <el-menu-item index="mainshoworopra">
                           <template slot="title">
                           <span>{{ subItem.dataName }}</span>
                         </template>
@@ -111,8 +105,6 @@ export default {
           {id:"1", dataName:"数据一"}
         ]}
       ],
-      // 用户名
-      username: 'admin',
       // 是开关按下
       isbutton: false
     }
@@ -140,6 +132,8 @@ export default {
   }
 }
 </script>
+
+
 
 <style lang="less" scoped>
 .home-container {

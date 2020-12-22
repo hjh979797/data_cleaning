@@ -15,9 +15,11 @@
 <script>
 export default {
   methods: {
-    add() {
+    add:function(amount) {
       // 最好不要直接修改数据,可以调用mutations中方法
-      this.$store.commit("add")
+      // this.$store.commit("add")
+      // 调用actions中的add
+      this.$store.dispatch("add", amount)
     }
   }
 }

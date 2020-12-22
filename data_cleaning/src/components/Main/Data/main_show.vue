@@ -25,8 +25,9 @@
       </el-header>
       <el-main>
         <!-- 数据显示 -->
+
         <el-table
-          :data="dataList"
+          :data="this.$store.getters.dataList"
           stripe
           border
           height="100%"
@@ -54,10 +55,10 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="queryInfo.pagenum"
-          :page-sizes="[1, 2, 5, 10]"
+          :page-sizes="[10, 20, 50, 100]"
           :page-size="queryInfo.pagesize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="totalData">
+          :total="this.$store.getters.dataListSize">
         </el-pagination>
       </el-footer>
   </el-container>
@@ -72,58 +73,8 @@ export default {
         // 当前页数
         pagenum: 1,
         // 当前每页显示多少数据
-        pagesize: 2
-      },
-      totalData: 100,
-      dataList: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
+        pagesize: 10
+      }
     }
   },
   // 生命周期函数，创建时候加载数据
