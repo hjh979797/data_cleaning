@@ -1,6 +1,7 @@
 <template>
   <div class="main-container">
     <div class="box">
+      
       <el-upload
       class="upload-demo"
       drag
@@ -10,6 +11,7 @@
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__tip" slot="tip" style="text-align: left">只能上传jpg/png文件，且不超过500kb</div>
       </el-upload>
+
       <div class="in_box">
         <label style="margin: 10px">数据集名称</label>
         <el-input v-model="dataname" placeholder="请输入数据集名称"></el-input>

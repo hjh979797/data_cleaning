@@ -3,10 +3,6 @@
   <div class="regist_container">
     <div class="top"></div>
     <div class="regist_box">
-      <!-- 头像区域
-      <div class="avatar_box">
-        <img src="../../assets/logo.png" alt=""/>
-      </div> -->
       <!-- 左边图 -->
       <div class="regist_left">
         <div class="left_back"></div>
@@ -23,8 +19,8 @@
         <el-form :model="registForm" :rules="registFormRules" label-width="0px" class="regist_form" ref="registFormRef">
           <div class="in">
             <!-- 用户名 -->
-            <el-form-item style="margin: 10px" prop="username">
-              <el-input prefix-icon="iconfont icon-user" v-model="registForm.username" placeholder="请输入账号" size="mini"></el-input>
+            <el-form-item style="margin: 10px" prop="mail">
+              <el-input prefix-icon="iconfont icon-user" v-model="registForm.mail" placeholder="请输入邮箱" size="mini"></el-input>
             </el-form-item>
             <!-- 密码 -->
             <el-form-item style="margin: 10px" prop="password">
@@ -37,9 +33,6 @@
           </div>
           <!-- 按钮区域 -->
           <el-button type="primary" class="regist" @click="regist">注 册</el-button>
-          <!-- <el-form-item class="btns"> -->
-            <!-- <el-button type="info">重置</el-button> -->
-          <!-- </el-form-item> -->
         </el-form>
         <div class="toback">
           <router-link to="/login">返回</router-link>
@@ -53,7 +46,21 @@
 <script>
 export default {
   data(){
-    var validatePass2 = (rule, value, callback) => {
+    var checkEmail = (rule, value, callback) => {
+      // 正则
+      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+      if (!value) {
+        return callback(new Error('邮箱不能为空'))
+      }
+      setTimeout(() => {
+        if (mailReg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入正确的邮箱格式'))
+        }
+      }, 100)
+    }
+    var checkRepass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'));
       } else if (value !== this.registForm.password) {
@@ -65,15 +72,15 @@ export default {
     return{
       // 登录表单的数据绑定对象
       registForm:{
-        username: 'hjh',  //数据绑定
-        password: 'mima',
+        mail: '',  //数据绑定
+        password: '',
         repassword: ''
       },
       registFormRules:{
         // 验证用户名合法性
-        username:[
-          {required: true, message: "请输入用户名", trigger: "blur"},
-          {min: 3, max: 10, message: "长度在3-10个字符之间", trigger: "blur"}
+        mail:[
+          {required: true, message: "请输入邮箱", trigger: "blur"},
+          { validator: checkEmail, trigger: 'blur' }
         ],
         // 验证密码合法性
         password:[
@@ -81,7 +88,7 @@ export default {
           {min: 6, max: 15, message: "长度在6-15个字符之间", trigger: "blur"}
         ],
         repassword:[
-          { validator: validatePass2, trigger: 'blur' }
+          { validator: checkRepass, trigger: 'blur' }
         ]
 
       }
@@ -91,7 +98,7 @@ export default {
     regist() {
       this.$refs.registFormRef.validate(async valid => {
         if(!valid) return;
-        const {data: res} = await this.$http.post('regist', this.registForm);
+        const {data: res} = await this.$http.post('/regist', this.registForm);
         if(res.meta.status !== 200) return console.log('注册失败')
         console.log('注册成功')
         console.log(res)
@@ -100,6 +107,7 @@ export default {
   }
 }
 </script>
+
 
 <style lang="less" scoped>
 .regist_container {

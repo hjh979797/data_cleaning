@@ -29,7 +29,7 @@
               <el-input
                 prefix-icon="iconfont icon-user"
                 v-model="loginForm.mail"
-                placeholder="请输入账号"
+                placeholder="请输入邮箱"
                 size="mini"
               ></el-input>
             </el-form-item>
@@ -62,6 +62,20 @@
 <script>
 export default {
   data() {
+    var checkEmail = (rule, value, callback) => {
+      // 正则
+      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+      if (!value) {
+        return callback(new Error('邮箱不能为空'))
+      }
+      setTimeout(() => {
+        if (mailReg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入正确的邮箱格式'))
+        }
+      }, 100)
+    }
     return {
       // 登录表单的数据绑定对象
       loginForm: {
@@ -72,7 +86,7 @@ export default {
         // 验证邮箱合法性-------------------------------------------
         mail: [
           { required: true, message: '请输入邮箱', trigger: 'blur' },
-          { min: 3, max: 50, message: '长度在3-50个字符之间', trigger: 'blur' }
+          { validator: checkEmail, trigger: 'blur'}
         ],
         // 验证密码合法性
         password: [

@@ -83,6 +83,7 @@ export default {
   },
   methods: {
     async getDataList() {
+      // 根据当前页数以及每页显示数据来获取该页数据
       const {data : res} = await this.$http.get('dataId', { params: this.queryInfo })
       console.log(res)
       if(res.meta.status !== 200) return this.$message.error(" 获取数据失败 ")
