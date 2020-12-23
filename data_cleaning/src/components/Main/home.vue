@@ -1,113 +1,87 @@
 <template>
   <div class="home-container">
-      <div class="top"></div>
-      <div class="main">
-        <el-container class="main-container">
-          <!-- 头部区域 -->
-          <el-header>
-            <div>
-              <img src="../../assets/clean_logo.png" alt=""/>
-              <span> 数据清洗平台 </span>
+    <div class="top"></div>
+    <div class="main">
+      <el-container class="main-container">
+        <!-- 头部区域 -->
+        <el-header>
+          <div>
+            <img src="../../assets/clean_logo.png" alt=""/>
+            <span> 数据清洗平台 </span>
+          </div>
+          <el-button
+            type="text"
+            size="medium"
+            v-model="this.$store.getters.getMail"
+            icon="iconfont icon-user"
+            class="info"
+          >{{ ' ' + this.$store.getters.getMail }}</el-button>
+        </el-header>
+        <!-- 页面主体 -->
+        <el-container>
+          <!-- 侧边栏 -->
+          <el-aside width="300px">
+            <!-- 侧边栏按钮 -->
+            <div class="btns">
+              <el-button type="primary" size="medium" @click="create_pro"><i class="el-icon-circle-plus el-icon--left"></i>创建项目</el-button>
+              <el-button type="primary" size="medium" @click="create_data"><i class="el-icon-upload el-icon--left"></i>导入数据</el-button>
             </div>
-            <el-button
-              type="text"
-              size="medium"
-              v-model="this.$store.getters.getMail"
-              icon="iconfont icon-user"
-              class="info"
-              >{{ ' ' + this.$store.getters.getMail }}</el-button>
-          </el-header>
-          <!-- 页面主体 -->
-          <el-container>
-            <!-- 侧边栏 -->
-            <el-aside width="300px">
-              <!-- 侧边栏按钮 -->
-              <div class="btns">
-                <el-button type="primary" size="medium" @click="create_pro"><i class="el-icon-circle-plus el-icon--left"></i>创建项目</el-button>
-                <el-button type="primary" size="medium" @click="create_data"><i class="el-icon-upload el-icon--left"></i>导入数据</el-button>
-              </div>
-              <!-- 侧边栏菜单区 -->
-              <!-- 最后开起路由模式,根据index跳 -->
-              <el-menu
-                background-color="#fff"
-                text-color="#000"
-                active-text-color="#2b3f6b"
-                unique-opened
-                router
-              >
-                <div class="menuone" v-for="item in prolist" :key="item.id">
-                  <!-- 一级菜单 -->
-                  <el-dropdown trigger="click">
-                    <span class="el-dropdown-link">
-                      <el-button type="text" icon="el-icon-more"></el-button>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>重命名</el-dropdown-item>
-                      <el-dropdown-item>删除</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                  <el-submenu :index="item.id + ''">
-                    <template slot="title">
-                      <span>{{ item.proName }}</span>
-                    </template>
-                    <!-- 二级菜单 -->
-                    <el-menu-item-group>
-                      <div class="menutwo" v-for="subItem in item.children" :key="subItem.id">
-                        <el-dropdown trigger="click">
-                          <span class="el-dropdown-link">
-                            <el-button type="text" icon="el-icon-more"></el-button>
-                          </span>
-                          <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>重命名</el-dropdown-item>
-                            <el-dropdown-item>删除</el-dropdown-item>
-                          </el-dropdown-menu>
-                        </el-dropdown>
-                        <!-- index指向去处 -->
-                        <el-menu-item index="mainshoworopra">
-                          <template slot="title">
-                          <span>{{ subItem.dataName }}</span>
-                        </template>
-                        </el-menu-item>
-                      </div>
-                    </el-menu-item-group>
-                  </el-submenu>
-                </div>
-
-              </el-menu>
-            </el-aside>
-            <!-- 内容 -->
-            <el-main>
-              <!-- 路由占位符 -->
-              <router-view></router-view>
-            </el-main>
-          </el-container>
+            <!-- 侧边栏菜单区 -->
+            <!-- 最后开起路由模式,根据index跳 -->
+            <el-menu
+              background-color="#fff"
+              text-color="#000"
+              active-text-color="#2b3f6b"
+              unique-opened
+              router
+            >
+              <Categoryitem></Categoryitem>
+            </el-menu>
+          </el-aside>
+          <!-- 内容 -->
+          <el-main>
+            <!-- 路由占位符 -->
+            <router-view></router-view>
+          </el-main>
         </el-container>
-      </div>
+      </el-container>
+    </div>
   </div>
 </template>
 
 <script>
+import App from '../../App.vue'
+// import category from '../zujian/categoryitem'
+import Categoryitem from '../yumiao/categoryitem.vue'
 export default {
+  components: { App },
   data() {
     return{
       //左侧菜单数据
       prolist: [
         {id:"1", proName:"项目一", children:[
-          {id:"1", dataName:"数据一"},
-          {id:"2", dataName:"数据二"}
-        ]},
+            {id:"1", dataName:"数据一"},
+            {id:"2", dataName:"数据二"}
+          ]},
         {id:"2", proName:"项目二", children:[
-          {id:"1", dataName:"数据一"},
-          {id:"2", dataName:"数据二"},
-          {id:"3", dataName:"数据三"}
-        ]},
+            {id:"1", dataName:"数据一"},
+            {id:"2", dataName:"数据二"},
+            {id:"3", dataName:"数据三"}
+          ]},
         {id:"3", proName:"项目三", children:[
-          {id:"1", dataName:"数据一"}
-        ]}
+            {id:"1", dataName:"数据一"}
+          ]}
       ],
       // 是开关按下
-      isbutton: false
+      isbutton: false,
+      visible: false,
+      dialogTableVisible: false,
+      dialogFormVisible: false,
+      formLabelWidth: '120px'
     }
+  },
+  components:{
+    Categoryitem
   },
   // 生命周期函数，加载菜单栏信息
   created() {
@@ -121,13 +95,13 @@ export default {
   },
   methods: {
     create_pro() {
-        this.$router.push('/home')
+      this.$router.push('/home')
     },
     create_data() {
-        this.$router.push('/datain')
+      this.$router.push('/datain')
     },
     opra() {
-      
+
     }
   }
 }
