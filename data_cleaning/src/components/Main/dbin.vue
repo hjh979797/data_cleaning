@@ -1,73 +1,106 @@
 <template>
   <div class="main-container">
     <div class="box">
-      <div class="in_box">
-        <label style="margin: 10px">数据库类型</label>
-        <el-select v-model="dbtype" placeholder="请选择">
-          <el-option
-            v-for="item in dbtype_options"
-            :key="item.value"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </div>
-      <div class="in_box">
-        <label style="margin: 10px">服务器IP</label>
-        <el-input v-model="ServerIP" placeholder="请输入信息"></el-input>
-      </div>
-      <div class="in_box">
-        <label style="margin: 10px">服务器端口号</label>
-        <el-input v-model="Serverport" placeholder="请输入信息"></el-input>
-      </div>
-      <div class="in_box">
-        <label style="margin: 10px">用户名</label>
-        <el-input v-model="username" placeholder="请输入信息"></el-input>
-      </div>
-      <div class="in_box">
-        <label style="margin: 10px">密码</label>
-        <el-input v-model="password" placeholder="请输入信息"></el-input>
-      </div>
-      <div class="in_box" style="height:40.8px">
-        <el-button @click="test" size="mini">测试连接</el-button>
-        <el-alert
-          title="测试通过"
-          type="success"
-          :closable="false"
-          v-show="issuccess&&isshow">
-        </el-alert>
-        <el-alert
-          title="测试失败"
-          type="error"
-          :closable="false"
-          v-show="!issuccess&&isshow">
-        </el-alert>
-      </div>
-      <div class="in_box">
-        <label style="margin: 10px">数据库</label>
-        <el-select v-model="db" placeholder="请选择">
-          <el-option
-            v-for="item in db_options"
-            :key="item.value"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </div>
-      <div class="in_box">
-        <label style="margin: 10px">表名</label>
-        <el-select v-model="tablename" placeholder="请选择">
-          <el-option
-            v-for="item in table_options"
-            :key="item.value"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </div>
-      <div class="in_box">
-        <label style="margin: 10px">数据集名称</label>
-        <el-input v-model="dataname" placeholder="请输入信息"></el-input>
-      </div>
-      <el-button @click="lookData = true" class="look_button">预览数据</el-button>
+      <el-form 
+        :model="dbinfoForm"
+        :rules="dbinfoFormRules"
+        label-width="0px"
+        ref="dbinfoFormRef">
+        <div class="in_box">
+          <label style="margin: 10px">数据库类型</label>
+          <el-form-item prop="dbtype">
+            <el-select v-model="dbinfoForm.dbtype" placeholder="请选择">
+              <el-option
+                v-for="item in dbinfoForm.dbtype_options"
+                :key="item.value"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="in_box">
+          <label style="margin: 10px">服务器IP</label>
+          <el-form-item prop="ServerIP">
+            <el-input v-model="dbinfoForm.ServerIP" placeholder="请输入信息"></el-input>
+          </el-form-item>
+        </div>
+        <div class="in_box">
+          <label style="margin: 10px">服务器端口号</label>
+          <el-form-item prop="Serverport">
+            <el-input v-model="dbinfoForm.Serverport" placeholder="请输入信息"></el-input>
+          </el-form-item>
+        </div>
+        <div class="in_box">
+          <label style="margin: 10px">用户名</label>
+          <el-form-item prop="username">
+            <el-input v-model="dbinfoForm.username" placeholder="请输入信息"></el-input>
+          </el-form-item>
+        </div>
+        <div class="in_box">
+          <label style="margin: 10px">密码</label>
+          <el-form-item prop="password">
+            <el-input v-model="dbinfoForm.password" placeholder="请输入信息"></el-input>
+          </el-form-item>
+        </div>
+        <div class="in_box" style="height:40.8px">
+            <el-button @click="test" size="mini">测试连接</el-button>
+            <el-alert
+              title="测试通过"
+              type="success"
+              :closable="false"
+              v-show="issuccess&&isshow">
+            </el-alert>
+            <el-alert
+              title="测试失败"
+              type="error"
+              :closable="false"
+              v-show="!issuccess&&isshow">
+            </el-alert>
+        </div>
+      </el-form>
+
+      <el-form
+        :model="dbinForm"
+        :rules="dbinFormRules"
+        label-width="0px"
+        ref="dbinFormRef"
+        :disabled="istest">
+        <div class="in_box">
+          <label style="margin: 10px">数据库</label>
+          <el-form-item prop="db">
+            <el-select v-model="dbinForm.db" placeholder="请选择">
+              <el-option
+                v-for="item in dbinForm.db_options"
+                :key="item.value"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="in_box">
+          <label style="margin: 10px">表名</label>
+          <el-form-item prop="tablename">
+            <el-select v-model="dbinForm.tablename" placeholder="请选择">
+              <el-option
+                v-for="item in dbinForm.table_options"
+                :key="item.value"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="in_box">
+          <label style="margin: 10px">数据集名称</label>
+          <el-form-item prop="dataname">
+            <el-input v-model="dbinForm.dataname" placeholder="请输入信息"></el-input>
+          </el-form-item>
+        </div>
+        <el-button @click="justifyLookData" class="look_button">预览数据</el-button>
+      </el-form>
     </div>
+    
+
+
     <el-dialog title="预览数据" :visible.sync="lookData" :modal-append-to-body="false" center>
       <el-container :v-model="form">
         <el-header>
@@ -101,26 +134,83 @@
 <script>
 export default {
   data() {
+    var t = (rule, value, callback) => {
+      console.log(value)
+    }
     return{
-      dbtype_options: [{
-        value: 'mysql'
-      },{
-        value: 'postgresql'
-      },{
-        value: 'oracle'
-      },{
-        value: 'SQL Server'
-      }],
-      db_options: [{
-        value: '数据库1'
-      },{
-        value: '数据库2'
-      }],
-      table_options: [{
-        value: '表1'
-      },{
-        value: '表2'
-      }],
+      dbinfoForm: {
+        dbtype: '',
+        ServerIP: '',
+        Serverport: '',
+        username: '',
+        password: '',
+        dbtype_options: [{
+          value: 'mysql'
+        },{
+          value: 'postgresql'
+        },{
+          value: 'oracle'
+        },{
+          value: 'SQL Server'
+        }]
+      },
+      dbinfoFormRules: {
+        dbtype: [
+          { required: true, message: '请输入数据库类型', trigger: 'blur' }
+        ],
+        ServerIP: [
+          { required: true, message: '请输入服务器IP', trigger: 'blur' }
+        ],
+        Serverport: [
+          { required: true, message: '请输入服务器端口号', trigger: 'blur' }
+        ],
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ]
+      },
+      dbinForm: {
+        db_options: [{
+          value: '数据库1'
+        },{
+          value: '数据库2'
+        }],
+        table_options: [{
+          value: '表1'
+        },{
+          value: '表2'
+        }],
+        dataname: '',
+        db: '',
+        tablename: ''
+      },
+      dbinFormRules: {
+        db: [
+          { required: true, message: '请输入数据库名', trigger: 'blur' }
+        ],
+        tablename: [
+          { required: true, message: '请输入表名', trigger: 'blur' }
+        ],
+        dataname: [
+          { required: true, message: '请输入数据集名称', trigger: 'blur' }
+        ],
+      },
+      form: {
+        totalrownum: 1000,
+        visrownum: 50,
+        colnum: 10,
+        selctall: true,
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
       gridData: [{
         date: '2016-05-02',
         name: '王小虎',
@@ -138,28 +228,7 @@ export default {
         name: '王小虎',
         address: '上海市普陀区金沙江路 1518 弄'
       }],
-      form: {
-        totalrownum: 1000,
-        visrownum: 50,
-        colnum: 10,
-        selctall: true,
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      },
-      dbtype: '',
-      ServerIP: '',
-      Serverport: '',
-      username: '',
-      password: '',
-      dataname: '',
-      db: '',
-      tablename: '',
+      istest: true,
       issuccess: true,
       isshow: false,
       lookData: false
@@ -167,11 +236,21 @@ export default {
   },
   methods: {
     test() {
-      this.isshow = true
+      this.$refs.dbinfoFormRef.validate((valid) => {
+        if(!valid) return
+        this.isshow = true
+        this.istest = false
+      })
     },
     inputData() {
       this.lookData = false
       this.$router.push('/maindata')
+    },
+    justifyLookData() {
+      this.$refs.dbinFormRef.validate((valid) => {
+        if(!valid) return
+        this.lookData = true
+      })
     }
   }
 }
@@ -196,7 +275,7 @@ export default {
       width: 60%
     }
     .in_box {
-      margin: 15px;
+      margin: 0px;
       display: flex;
       justify-content: flex-end;
       .el-input {

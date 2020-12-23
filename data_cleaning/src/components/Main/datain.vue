@@ -1,28 +1,37 @@
 <template>
   <div class="main-container">
-    <div class="box">
-      <div style="margin: 30px">
-        <label>导入的项目:</label>
-        <el-select v-model="pro_value" placeholder="请选择">
-          <el-option
-            v-for="item in pro_options"
-            :key="item.value"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </div>
-      <div style="margin: 30px">
-        <label>导入的数据类型:</label>
-        <el-select v-model="data_value" placeholder="请选择">
-          <el-option
-            v-for="item in data_options"
-            :key="item.value"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </div>
-      <el-button @click="next">下一步</el-button>
-    </div>
+    <el-form 
+    class="box"
+    :model="datainForm"
+    :rules="datainFormRules"
+    label-width="0px"
+    ref="datainFormRef">
+        <div class="row-box">
+          <label style="height: 100%">导入的项目:</label>
+          <el-form-item prop="pro_value">
+            <el-select v-model="datainForm.pro_value" placeholder="请选择">
+              <el-option
+                v-for="item in datainForm.pro_options"
+                :key="item.value"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="row-box">
+          <label>导入的数据类型:</label>
+          <el-form-item prop="data_value">
+            <el-select v-model="datainForm.data_value" placeholder="请选择">
+              <el-option
+                v-for="item in datainForm.data_options"
+                :key="item.value"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+      <el-button @click="next">下一步</el-button>      
+    </el-form>
   </div>
 </template>
 
@@ -30,26 +39,37 @@
 export default {
   data() {
     return {
-      pro_options: [{
-        value: '项目一'
-      },{
-        value: '项目二'
-      }],
-      data_options: [{
-        value: '文本文件'
-      },{
-        value: '外部数据库'
-      }],
-      pro_value: '',
-      data_value: ''
+      datainForm: {
+        pro_options: [{
+          value: '项目一'
+        },{
+          value: '项目二'
+        }],
+        data_options: [{
+          value: '文本文件'
+        },{
+          value: '外部数据库'
+        }],
+        pro_value: '',
+        data_value: ''
+      },
+      datainFormRules: {
+        pro_value: [
+          { required: true, message: '请选择项目', trigger: 'change' },
+        ],
+        data_value: [
+          { required: true, message: '请选择需要导入', trigger: 'change' }
+        ]
+      }
     }
   },
   methods: {
     next() {
-      console.log(this.data_value)
-      if(this.data_value==='') this.$message.error("请选择数据类型")
-      if(this.data_value==='文本文件') this.$router.push('/textdatain')
-      if(this.data_value==='外部数据库') this.$router.push('/dbin')
+      this.$refs.datainFormRef.validate((valid) => {
+        if(!valid) return
+        if(this.datainForm.data_value==='文本文件') this.$router.push('/textdatain')
+        if(this.datainForm.data_value==='外部数据库') this.$router.push('/dbin')
+      })
     }
   }
 }
@@ -70,6 +90,13 @@ export default {
       left: 50%;
       transform: translate(-50%);
     }
+}
+.row-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px;
+  width: 100%;
 }
 }
 </style>

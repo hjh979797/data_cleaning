@@ -16,6 +16,7 @@
           "styleLibraryName": "theme-chalk"
         }
       ]
-    ]
+    ],
+    "transform-object-rest-spread"
   ]
 }

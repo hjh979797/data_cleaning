@@ -20,6 +20,8 @@ Vue.prototype.$http = axios
 import GlobalIndex from './components/zujian/index.vue'
 Vue.use(GlobalIndex) //引用自定义组件
 Vue.component('global-index', GlobalIndex) // 初始化组件
+
+
 Vue.use(ElementUI)
 import {store} from './store/store'
 

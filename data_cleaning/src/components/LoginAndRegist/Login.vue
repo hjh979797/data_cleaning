@@ -204,11 +204,6 @@ export default {
     font-weight: bold;
   }
   .line {
-    // border: 0px;
-    // height: 0px;
-    // width: 10px;
-    // margin-top: 5px;
-    // border: 1px solid #A8BEE5;
     border: 0px;
     height: 1px;
     margin-top: 5px;

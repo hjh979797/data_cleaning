@@ -1,30 +1,49 @@
 <template>
   <div class="main-container">
-    <div class="box">
-      
-      <el-upload
-      class="upload-demo"
-      drag
-      action="https://jsonplaceholder.typicode.com/posts/"
-      multiple>
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip" style="text-align: left">只能上传jpg/png文件，且不超过500kb</div>
-      </el-upload>
-
+    <!-- <div class="box"> -->
+    <el-form 
+      class="box"
+      :model="textdatainForm"
+      :rules="textdatainFormRules"
+      label-width="0px"
+      ref="textdatainFormRef">
+      <el-form-item class="in_box" prop="upload">
+        <!-- "https://jsonplaceholder.typicode.com/posts/" -->
+        <!-- http://120.26.162.152:8088/post -->
+        <!-- :headers = "headers" -->
+        <el-upload
+          class="upload-demo"
+          drag
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-change="uploadChange"
+          :on-remove="remove"
+          multiple>
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          <div class="el-upload__tip" slot="tip" style="text-align: left">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
+      </el-form-item>
       <div class="in_box">
         <label style="margin: 10px">数据集名称</label>
-        <el-input v-model="dataname" placeholder="请输入数据集名称"></el-input>
+        <el-form-item prop="dataname">
+          <el-input v-model="textdatainForm.dataname" placeholder="请输入数据集名称"></el-input>
+        </el-form-item>
       </div>
       <div class="in_box">
         <label style="margin: 10px">分隔符</label>
-        <el-input v-model="sep" placeholder="请输入分隔符"></el-input>
+        <el-form-item prop="sep">
+          <el-input v-model="textdatainForm.sep" placeholder="请输入分隔符"></el-input>
+        </el-form-item>
       </div>
       <div class="in_box" style="height: 40.8px">
-        <el-checkbox v-model="isfirstname">将第一行作为属性名称</el-checkbox>
+        <el-form-item>
+          <el-checkbox v-model="textdatainForm.isfirstname">将第一行作为属性名称</el-checkbox>
+        </el-form-item>
       </div>
-      <el-button @click="lookData = true" class="look_button">预览数据</el-button>
-    </div>
+      <el-button @click="justifyLookData" class="look_button">预览数据</el-button>
+        
+    </el-form>
+    <!-- </div> -->
     <el-dialog title="预览数据" :visible.sync="lookData" :modal-append-to-body="false" center>
       <el-container :v-model="form">
         <el-header>
@@ -58,10 +77,30 @@
 <script>
 export default {
   data() {
+    var checkFile = (rule, value, callback) => {
+      console.log(value)
+    }
     return {
-      sep: '',
-      dataname: '',
-      isfirstname: false,
+      headers: {
+        Authorization: window.sessionStorage.getItem("token")
+      },
+      textdatainForm: {
+        sep: '',
+        dataname: '',
+        isfirstname: false,
+      },
+      textdatainFormRules: {
+        upload: [
+          // { validator: checkFile, trigger: 'blur'}
+          { required: true, message: '请上传文件', trigger: 'change' }
+        ],
+        dataname: [
+          { required: true, message: '请输入数据集名称', trigger: 'blur' }
+        ],
+        sep: [
+          { required: true, message: '请输入分隔符', trigger: 'blur' }
+        ]
+      },
       lookData: false,
       gridData: [{
         date: '2016-05-02',
@@ -101,6 +140,26 @@ export default {
     inputData() {
       this.lookData = false
       this.$router.push('/maindata')
+    },
+    justifyLookData() {
+      this.$refs.textdatainFormRef.validate((valid) => {
+        if(!valid) return
+        this.lookData = true
+      })
+    },
+    uploadChange(file, fileList) {
+      this.headFile = file
+      this.headFileList = fileList
+      if(fileList.length==1) {
+          let {upload, ...data} = this.textdatainFormRules;
+          this.textdatainFormRules = data;
+      }
+      this.$refs.textdatainFormRef.clearValidate('upload');
+    },
+    remove(file, fileList) {
+      if(fileList.length==0){
+        this.textdatainFormRules.upload = [{ required: true, message: '请上传文件', trigger: 'change' }]
+      }
     }
   }
 }
@@ -126,11 +185,12 @@ export default {
       display: flex;
       justify-content: flex-end;
       .el-input {
-        width: 60%;
+        width: 80%;
       }
       .el-checkbox {
         position: absolute;
-        left: 30%;
+        right: 50%;
+        transform: translate(-50%);
       }
     }
   }
