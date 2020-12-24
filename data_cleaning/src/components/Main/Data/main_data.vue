@@ -28,7 +28,7 @@
                 <router-view name="show"></router-view>   
               </el-main>
               <!-- 侧边操作 -->
-              <el-aside width="300px" class="home-aside">
+              <el-aside width="400px" class="home-aside">
                 <!-- 路由占位符 -->
                 <router-view name="opra"></router-view>
               </el-aside>
