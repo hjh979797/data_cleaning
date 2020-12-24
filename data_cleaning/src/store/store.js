@@ -9,9 +9,12 @@ export const store = new Vuex.Store({
   strict: true,
   // state相当于组件中的data，专门用于保存共享数据 this.$store访问
   state: {
+    // 记录token
+    token: window.sessionStorage.getItem("token") || "",
+    // 用户信息
+    mail: window.sessionStorage.getItem("mail")||"",
+    password: window.sessionStorage.getItem("pwd")||"",
     count: 100,
-    mail: '',
-    password: '',
     dataList: [{
       date: '2016-05-02',
       name: '王小虎',
@@ -71,9 +74,16 @@ export const store = new Vuex.Store({
     add(state, payload) {
       state.count = state.count + payload;
     },
-    setUserInfo(state, payload) {
+    userInfoFix(state, payload) {
+      sessionStorage.setItem("mail", payload.mail)
       state.mail = payload.mail
-      state.password = payload.password
+      sessionStorage.setItem("pwd", payload.password)
+      this.password = payload.password
+    },
+    //  赋值token
+    tokenFix (state, token) {
+      sessionStorage.setItem("token", token)
+      state.token = token
     }
   },
   // 用于保存计算属性，计算属性：将计算结果缓存，只要数据没有发生变化，只发生一次，以后都使用缓存中数据
@@ -101,8 +111,11 @@ export const store = new Vuex.Store({
         context.commit("add", payload)
       },3000)
     },
-    setUserInfo:(context, payload) => {
-      context.commit("setUserInfo",payload)
+    updateuserinfo:(context, payload) => {
+      context.commit("userInfoFix",payload)
+    },
+    updatetoken (context, value) {
+      context.commit("tokenFix", value)
     }
   }
 })
