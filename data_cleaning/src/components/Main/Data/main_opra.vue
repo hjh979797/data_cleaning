@@ -9,10 +9,18 @@
       {{ this.$store.getters.update }}
       {{ this.$store.getters.update }}
     </h3>
+    <!-- <div>
+      <filteritem></filteritem>
+    </div> -->
+    <div>
+    <fillitem></fillitem>
+    </div>
   </div>
 </template>
 
 <script>
+import filteritem from '../../yumiao/filter.vue'
+import fillitem from '../../yumiao/fill.vue'
 export default {
   methods: {
     add:function(amount) {
@@ -21,6 +29,10 @@ export default {
       // 调用actions中的add
       this.$store.dispatch("add", amount)
     }
+  },
+  components:{
+    filteritem,
+    fillitem
   }
 }
 </script>
