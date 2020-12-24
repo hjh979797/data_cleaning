@@ -43,36 +43,66 @@
         </el-select>
       </div>
     </div>
+  <div>
+    <el-button @click="fill">提交</el-button>
+  </div>
   </div>
 </template>
 
 <script>
+import filter from './filter.vue'
 export default {
+  components: { filter },
   data(){
     return{
+      form: {
+        columnName: 12,
+        type: "123",
+        logId:  "12"
+      },
       bankcounter: 0,
       totalcounter:0,
       value: true,
       input:"",
       options: [{
           value: '选项1',
-          label: '黄金糕'
+          label: '平均值填充'
         }, {
           value: '选项2',
-          label: '双皮奶'
+          label: '最小值填充'
         }, {
           value: '选项3',
-          label: '蚵仔煎'
+          label: '最大值填充'
         }, {
           value: '选项4',
-          label: '龙须面'
+          label: '众数填充'
         }, {
           value: '选项5',
-          label: '北京烤鸭'
+          label: '插补法'
+        },{
+          value: '选项6',
+          label: '随机填充法'
+        }],
+        options2: [{
+          value: '选项1',
+          label: '拉格朗日插值法'
+        }, {
+          value: '选项2',
+          label: '线性插值'
         }],
         value1: '',
         value2: '',
         radio:'1'
+    }
+  },
+  methods:{
+    fill:function(){
+        //发送get请求
+        this.$http.get('/table/tableName/fill',this.form).then(function(res){
+            console.log(res);
+        },function(){
+            console.log('请求失败处理');
+        });
     }
   }
 }
