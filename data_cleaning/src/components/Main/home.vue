@@ -35,7 +35,9 @@
               unique-opened
               router
             >
-              <Categoryitem></Categoryitem>
+              <div class="cate" v-for="item in prolist" :key="item.id">
+                <Categoryitem :item="item"/>
+              </div>
             </el-menu>
           </el-aside>
           <!-- 内容 -->
@@ -50,11 +52,11 @@
 </template>
 
 <script>
-import App from '../../App.vue'
-// import category from '../zujian/categoryitem'
 import Categoryitem from '../yumiao/categoryitem.vue'
 export default {
-  components: { App },
+  components: {
+    Categoryitem
+  },
   data() {
     return{
       //左侧菜单数据
@@ -99,9 +101,6 @@ export default {
     },
     create_data() {
       this.$router.push('/datain')
-    },
-    opra() {
-
     }
   }
 }

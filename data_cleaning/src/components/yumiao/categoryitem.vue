@@ -2,9 +2,9 @@
   <div class="menuone" v:bind:item>
     <!-- <el-dropdown @command="handleCommand" trigger="click"> -->
     <el-dropdown @command="handleCommand" trigger="click">
-        <span class="el-dropdown-link">
-            <el-button type="text" icon="el-icon-more"></el-button>
-        </span>
+      <span class="el-dropdown-link">
+          <el-button type="text" icon="el-icon-more"></el-button>
+      </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="rename">重命名</el-dropdown-item>
         <el-dropdown-item command="del">删除</el-dropdown-item>
@@ -22,7 +22,9 @@
       </template>
       <!-- 二级菜单 -->
       <el-menu-item-group>
-        <second-categoryitem></second-categoryitem>
+        <div v-for="subitem in item.children" :key="subitem.id">
+          <second-categoryitem :subitem="subitem"/>
+        </div>
       </el-menu-item-group>
     </el-submenu>
   </div>
@@ -31,13 +33,11 @@
 import SecondCategoryitem from './secondCategoryitem.vue'
 
 export default {
+  props: [
+    'item'
+  ],
   data(){
     return {
-      item:{
-        id:1,
-        proName:"项目1"
-      },
-
       visible_span:true,
       visible_input:false,
     }
@@ -78,6 +78,7 @@ export default {
   }
 }
 </script>
+
 <style lang="less" scoped>
 .home-container {
   width: 100%;

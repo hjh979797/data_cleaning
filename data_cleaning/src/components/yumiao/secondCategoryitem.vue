@@ -12,17 +12,54 @@
     <!-- index指向去处 -->
     <el-menu-item index="mainshoworopra">
       <template slot="title">
-        <span>{{seconditem.dataname }}</span>
+        <div v-show="visible_input">
+          <el-input id="input_rename" v-model="subitem.dataName"  ref="mark" @blur="loseblur" v-focus></el-input>
+        </div>
+        <div v-show="visible_span">
+          <span>{{subitem.dataName }}</span>
+        </div>
       </template>
     </el-menu-item>
   </div>
 </template>
 <script>
 export default {
+  props:[
+    'subitem'
+  ],
   data(){
-    return{
-      seconditem:{
-        dataname:"数据1"
+    return {
+      visible_span:true,
+      visible_input:false,
+    }
+  },
+  methods:{
+    handleCommand:function(command){
+      if(command=='rename'){
+        console.log(command)
+        this.visible_span=false;
+        this.visible_input=true;
+        document.getElementById("input_rename").focus();
+        document.getElementById("input_rename").focus();
+        setTimeout(() => {
+          this.$refs.mark.$el.querySelector('input').focus();
+        }, 3);
+      }
+    },
+    loseblur:function(){
+      console.log("sdkfas")
+      this.visible_input=false;
+      this.visible_span=true;
+    }
+  },
+  directives: {
+    focus: {
+      // 指令的定义
+      inserted: function (el) {
+        el.focus()
+      },
+      update: function (el) {
+        el.focus()
       }
     }
   }
