@@ -9,7 +9,8 @@ import DbIn from '../components/Main/dbin.vue'
 import MainData from '../components/Main/Data/main_data.vue'
 import MainShow from '../components/Main/Data/main_show.vue'
 import MainOpra from '../components/Main/Data/main_opra.vue'
-
+import Create_pro from '../components/Main/Create_pro.vue'
+import Splitcolumns from '../components/yumiao/splitcolumns.vue'
 Vue.use(Router)
 
 const router = new Router({
@@ -22,7 +23,9 @@ const router = new Router({
       children: [
         { path: '/datain', component: Datain },
         { path: '/textdatain', component: TextData },
-        { path: '/dbin', component: DbIn }
+        { path: '/dbin', component: DbIn },
+        { path: '/Create_pro', component: Create_pro },
+        
       ] //子路由
     },
     { path: '/login', component: Login },
@@ -34,7 +37,10 @@ const router = new Router({
         { path: '/mainshoworopra', components: {
             show: MainShow,
             opra: MainOpra
-          }
+          },
+          children:[
+            { path: '/Splitcolumns', component: Splitcolumns },
+          ]
         }
       ]
     }

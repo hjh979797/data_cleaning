@@ -1,15 +1,15 @@
 <template>
   <el-container class="box-container">
       <el-header height="5%">
-        <el-dropdown  trigger="click">
+        <el-dropdown  trigger="click" @command="moreopera">
           <el-button class="el-dropdown-link" type="info" round size="mini">
             更多操作
             <i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
-          <el-dropdown-menu slot="dropdown">
+          <el-dropdown-menu slot="dropdown" >
             <el-dropdown-item>行列转换</el-dropdown-item>
             <el-dropdown-item>增加列</el-dropdown-item>
-            <el-dropdown-item>拆分列</el-dropdown-item>
+            <el-dropdown-item command="splitcolumns" >拆分列</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <el-dropdown  trigger="click">
@@ -23,7 +23,7 @@
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
-      <el-main>
+      <el-main v-show="main_show">
         <!-- 数据显示 -->
 
         <el-table
@@ -48,6 +48,7 @@
           </el-table-column>
         </el-table>
       </el-main>
+      <splitcolumns v-show="split_show"></splitcolumns>
 
       <!-- 页码部分 -->
       <el-footer height="5%">
@@ -65,6 +66,7 @@
 </template>
 
 <script>
+import splitcolumns from '../../yumiao/splitcolumns.vue'
 export default {
   data() {
     return{
@@ -74,8 +76,13 @@ export default {
         pagenum: 1,
         // 当前每页显示多少数据
         pagesize: 10
-      }
+      },
+      main_show:true,
+      split_show:false,
     }
+  },
+  components:{
+    splitcolumns
   },
   // 生命周期函数，创建时候加载数据
   created () {
@@ -101,6 +108,16 @@ export default {
       console.log(`当前页: ${newPage}`)
       this.queryInfo.pagenum = newPage
       // this.getDataList()
+    },
+    moreopera(command){
+      if(command=="splitcolumns")
+      {
+        console.log(command);
+        this.main_show=false;
+        this.split_show=true;
+        // this.$router.push('/Splitcolumns')
+      }
+      
     }
   }
 }

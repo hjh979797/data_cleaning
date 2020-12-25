@@ -1,6 +1,6 @@
 <template>
-  <div>
-      <div>
+  <div style="border: solid">
+      <div style="border: solid">
         <el-select v-model="value" placeholder="请选择字段名">
             <el-option
             v-for="item in options"
@@ -15,9 +15,12 @@
           <el-input v-model="input" placeholder="请输入内容"></el-input>
       </div>
       <div>
-          <div>
+          <div v-for="(item, index) in mylist" :key=index>
               <label>新增字段名</label>
-              <el-input v-model="name" placeholder="请输入内容"></el-input>
+              <el-input v-model="item.val" placeholder="请输入内容"></el-input>
+          </div>
+          <div>
+            <label @click="add">添加字段名</label>
           </div>
       </div>
   </div>
@@ -27,25 +30,35 @@
   export default {
     data() {
       return {
+        str:"aaa,bbb,ccc",
+        mylist:[],
         options: [{
-          value: '选项1',
-          label: '黄金糕'
+          value: 'HTML',
+          label: 'HTML'
         }, {
-          value: '选项2',
-          label: '双皮奶'
+          value: 'CSS',
+          label: 'CSS'
         }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
+          value: 'JavaScript',
+          label: 'JavaScript'
         }],
-        value: '',
-        input:'',
-        input_name:[]
+        value:[],
+        input:""
+      }
+    },
+    mounted() {
+      this.mylist = this.str.split(",").map(function(item){
+        return{val: item};
+      });
+    },
+    methods:{
+      add() {
+        this.mylist.push({ val: "" });
+       },
+      remove(myindex) {
+        this.mylist = this.mylist.filter(
+          (currentValue, index) => index != myindex
+        );
       }
     }
   }

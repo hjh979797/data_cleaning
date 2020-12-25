@@ -97,7 +97,14 @@ export default {
   },
   methods: {
     create_pro() {
-      this.$router.push('/home')
+      // this.$router.push('/create_pro')
+      var len = this.prolist.length;
+      console.log(len)
+      this.prolist.push(
+        {id:len+1, proName:"项目"+len, children:[
+          ]}
+      )
+
     },
     create_data() {
       this.$router.push('/datain')
