@@ -42,6 +42,9 @@
 
 <script>
 export default {
+  created() {
+    console.log(this.$route.params.dataid)
+  },
   data() {
     return{
     }

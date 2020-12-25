@@ -25,26 +25,18 @@
       </el-header>
       <el-main>
         <!-- 数据显示 -->
-
         <el-table
-          :data="this.$store.getters.dataList"
+          :data="this.$store.getters.getDataList"
           stripe
           border
           height="100%"
           style="width: 100%">
-          <el-table-column
-            prop="date"
-            label="日期"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="姓名"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="address"
-            label="地址">
+          
+          <el-table-column 
+            v-for="(item, index) in this.$store.getters.getDataCol" 
+            :key="index"
+            :prop="item.cloumnName"
+            :label="item.cloumnName">
           </el-table-column>
         </el-table>
       </el-main>
@@ -68,6 +60,9 @@
 export default {
   data() {
     return{
+      tableInfo: {
+        tableName: ''
+      },
       queryInfo: {
         query: '',
         // 当前页数
@@ -77,18 +72,28 @@ export default {
       }
     }
   },
+  computed: {
+    myData(){
+      return this.$store.getters.getDataList
+    }
+  },
   // 生命周期函数，创建时候加载数据
   created () {
-    // this.getDataList()
+    this.tableInfo.tableName = "tbl_" + this.$route.params.dataid
+    this.getDataList()
   },
   methods: {
     async getDataList() {
       // 根据当前页数以及每页显示数据来获取该页数据
-      const {data : res} = await this.$http.get('dataId', { params: this.queryInfo })
-      console.log(res)
-      if(res.meta.status !== 200) return this.$message.error(" 获取数据失败 ")
-      this.dataList = res.data.datas
-      this.totalData = res.data.total
+      const {data: res} =  await this.$http({
+        url:"/table/"+this.tableInfo.tableName,
+        headers: {
+          Authorization: this.$store.getters.getToken
+        },
+        methods: "get"
+      })
+      if(res.code !== 0) return this.$message.error(" 获取数据失败 ")
+      this.$store.dispatch("updateDataList", res.data)
     },
     // 监听 pageSize 改变的事件
     handleSizeChange(newSize) {

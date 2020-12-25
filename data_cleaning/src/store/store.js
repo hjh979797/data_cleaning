@@ -15,65 +15,13 @@ export const store = new Vuex.Store({
     mail: window.sessionStorage.getItem("mail")||"",
     password: window.sessionStorage.getItem("pwd")||"",
     count: 100,
-    dataList: [{
-      date: '2016-05-02',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1518 弄'
-    }, {
-      date: '2016-05-04',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1517 弄'
-    }, {
-      date: '2016-05-01',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1519 弄'
-    }, {
-      date: '2016-05-03',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1516 弄'
-    }, {
-      date: '2016-05-02',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1518 弄'
-    }, {
-      date: '2016-05-04',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1517 弄'
-    }, {
-      date: '2016-05-01',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1519 弄'
-    }, {
-      date: '2016-05-03',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1516 弄'
-    }, {
-      date: '2016-05-02',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1518 弄'
-    }, {
-      date: '2016-05-04',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1517 弄'
-    }, {
-      date: '2016-05-01',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1519 弄'
-    }, {
-      date: '2016-05-03',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1516 弄'
-    }]
+    prolist: window.sessionStorage.getItem("prolist")||"",
+    datalist: window.sessionStorage.getItem("datalist")||"",
+    datacol: window.sessionStorage.getItem("datacol")||""
   },
   // 保存用于修改数据的方法，且可追踪
   mutations: {
-    increment(state) {
-      state.count++
-    },
     // 自动传了一个state
-    add(state, payload) {
-      state.count = state.count + payload;
-    },
     userInfoFix(state, payload) {
       sessionStorage.setItem("mail", payload.mail)
       state.mail = payload.mail
@@ -84,23 +32,44 @@ export const store = new Vuex.Store({
     tokenFix (state, token) {
       sessionStorage.setItem("token", token)
       state.token = token
+    },
+    prolistFix(state, prolist) {
+      sessionStorage.setItem("prolist", prolist)
+      state.prolist = prolist
+    },
+    datalistFix(state, datalist){
+      // let datas = JSON.parse(JSON.stringify(datalist.tableData))
+      let datas = JSON.stringify(datalist.tableData)
+      // datas.forEach((item, idx) => {
+      //   datas[idx] = JSON.parse(JSON.stringify(item))
+      // });
+      sessionStorage.setItem("datalist", datas)
+      sessionStorage.setItem("datacol", datalist.tableColumns)
+      state.datacol = datalist.tableColumns
+      state.datalist = datas
     }
   },
   // 用于保存计算属性，计算属性：将计算结果缓存，只要数据没有发生变化，只发生一次，以后都使用缓存中数据
   // (也就是方法不会去执行，返回的结果已经缓存，直接读取缓存数据)
   getters: {
     // 也会自动传 state 用于加工
-    update(state) {
-      console.log("test")
-      return state.count + 1
-    },
-    dataList(state) {
-      return state.dataList
-    },
     dataListSize(state) {
-      return state.dataList.length
-    },getMail(state){
+      return JSON.parse(state.datalist).length
+    },
+    getMail(state){
       return state.mail
+    },
+    getToken(state){
+      return state.token
+    },
+    getProList(state){
+      return state.prolist
+    },
+    getDataList(state){
+      return JSON.parse(state.datalist)
+    },
+    getDataCol(state){
+      return state.datacol
     }
   },
   // Actions类似于Mutations，提交的是mutations而不是变更当前状态，可以包含任意异步操作
@@ -116,6 +85,12 @@ export const store = new Vuex.Store({
     },
     updatetoken (context, value) {
       context.commit("tokenFix", value)
+    },
+    uploadProList (context, value) {
+      context.commit("prolistFix", value)
+    },
+    updateDataList (context, value) {
+      context.commit("datalistFix", value)
     }
   }
 })

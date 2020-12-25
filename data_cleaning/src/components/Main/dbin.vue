@@ -133,11 +133,15 @@
 
 <script>
 export default {
+  created() {
+    this.proid = this.$route.params.proid
+  },
   data() {
     var t = (rule, value, callback) => {
       console.log(value)
     }
     return{
+      proid: "",
       dbinfoForm: {
         dbtype: '',
         ServerIP: '',
@@ -238,6 +242,24 @@ export default {
     test() {
       this.$refs.dbinfoFormRef.validate((valid) => {
         if(!valid) return
+        this.$http({
+          url:  "/data/DBTest",
+          methods: "get",
+          params: {
+            DBUrl: 'jdbc:mysql://localhost:3308',
+            User: 'root',
+            Password: '123456'
+          },
+          headers: {
+            Authorization: this.$store.getters.getToken
+          },
+          success: function (msg) {
+            console.log(msg)
+          },
+          error: function(msg){
+            console.log(msg)
+          }
+        })
         this.isshow = true
         this.istest = false
       })

@@ -8,16 +8,18 @@
       label-width="0px"
       ref="textdatainFormRef">
       <el-form-item class="in_box" prop="upload">
-        <!-- "https://jsonplaceholder.typicode.com/posts/" -->
-        <!-- http://120.26.162.152:8088/post -->
-        <!-- :headers = "headers" -->
         <el-upload
           class="upload-demo"
           drag
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="http://120.26.162.152:8088/data/importView"
+          ref="upload"
           :on-change="uploadChange"
           :on-remove="remove"
-          multiple>
+          :auto-upload="false"
+          :on-success="handleSuccess"
+          :headers="myHeader"
+          :data="myData"
+          :on-error="handleError">
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
           <div class="el-upload__tip" slot="tip" style="text-align: left">只能上传jpg/png文件，且不超过500kb</div>
@@ -60,9 +62,12 @@
         </el-header>
         <el-main>
           <el-table :data="gridData">
-            <el-table-column property="date" label="日期" width="150"></el-table-column>
-            <el-table-column property="name" label="姓名" width="200"></el-table-column>
-            <el-table-column property="address" label="地址"></el-table-column>
+            <el-table-column 
+              v-for="(item, index) in cols"
+              :key="index"
+              :prop="item" 
+              :label="item">
+            </el-table-column>
           </el-table>
         </el-main>
         <el-footer>
@@ -76,18 +81,20 @@
 
 <script>
 export default {
+  created() {
+    this.proid = parseInt(this.$route.params.proid)
+  },
   data() {
     var checkFile = (rule, value, callback) => {
       console.log(value)
     }
     return {
-      headers: {
-        Authorization: window.sessionStorage.getItem("token")
-      },
+      proid: '',
+      fileType: "",
       textdatainForm: {
         sep: '',
         dataname: '',
-        isfirstname: false,
+        isfirstname: false
       },
       textdatainFormRules: {
         upload: [
@@ -119,6 +126,7 @@ export default {
         name: '王小虎',
         address: '上海市普陀区金沙江路 1518 弄'
       }],
+      cols: [],
       form: {
         totalrownum: 1000,
         visrownum: 50,
@@ -139,17 +147,69 @@ export default {
   methods: {
     inputData() {
       this.lookData = false
-      this.$router.push('/maindata')
+      this.$http({
+        url: "/data/import",
+        method: "post",
+        data: {
+          DataName: this.textdatainForm.dataname,
+          FileType: this.fileType,
+          ProjectId: this.proid,
+          ImportColumns: "["+Array.from({length: this.cols.length}, (x, i) => i).join(",")+"]"
+        },
+        headers: {
+          Authorization: this.$store.getters.getToken
+        }
+      }).then(res => {
+        console.log(res)
+      }, error => {
+        console.log("错误；", error.message)
+      })
+      // this.$router.push('/maindata')
     },
     justifyLookData() {
       this.$refs.textdatainFormRef.validate((valid) => {
         if(!valid) return
-        this.lookData = true
+        this.$refs.upload.submit()
       })
+    },
+    handleSuccess(res, file, fileList){
+      console.log(res.data.data)
+      if(res.code !== 0) return
+      let datas = res.data.data
+      let cols = res.data.columns
+      let datastr = "["
+      let len1 = datas.length
+      let len2 = cols.length
+      datas.forEach((element1,idx1)=>{
+        datastr += "{"
+        cols.forEach((element2,idx2) => {
+          datastr += "\""
+          datastr += element2+""
+          datastr += "\":\""
+          datastr += element1[idx2]
+          datastr += "\""
+          if(idx2 < len2-1) datastr += ","
+        })
+        datastr += "}"
+        if(idx1 < len1-1) datastr += ","
+      })
+      datastr += "]"
+      console.log(datastr)
+      console.log(JSON.parse(datastr))
+      this.gridData = JSON.parse(datastr)
+      this.cols = cols
+      this.lookData = true
+    },
+    handleError(res, file, fileList){
+      // 有错
     },
     uploadChange(file, fileList) {
       this.headFile = file
       this.headFileList = fileList
+      let fileName = file.name
+      let pos = fileName.lastIndexOf('.')
+      let lastName = fileName.substring(pos+1, fileName.length)
+      this.fileType = lastName
       if(fileList.length==1) {
           let {upload, ...data} = this.textdatainFormRules;
           this.textdatainFormRules = data;
@@ -159,6 +219,21 @@ export default {
     remove(file, fileList) {
       if(fileList.length==0){
         this.textdatainFormRules.upload = [{ required: true, message: '请上传文件', trigger: 'change' }]
+      }
+      this.fileType = ""
+    }
+  },
+  computed: {
+    myData(){
+      return {
+        "DataName": this.textdatainForm.dataname,
+        "FileType": this.fileType,
+        "ProjectId": this.proid
+      }
+    },
+    myHeader(){
+      return {
+        "Authorization": this.$store.getters.getToken
       }
     }
   }

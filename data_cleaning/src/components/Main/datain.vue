@@ -8,12 +8,13 @@
     ref="datainFormRef">
         <div class="row-box">
           <label style="height: 100%">导入的项目:</label>
-          <el-form-item prop="pro_value">
-            <el-select v-model="datainForm.pro_value" placeholder="请选择">
+          <el-form-item prop="proid">
+            <el-select v-model="datainForm.proid" placeholder="请选择">
               <el-option
-                v-for="item in datainForm.pro_options"
-                :key="item.value"
-                :value="item.value">
+                v-for="item in this.$store.getters.getProList"
+                :key="item.projectId"
+                :label="item.projectName"
+                :value="item.projectId">
               </el-option>
             </el-select>
           </el-form-item>
@@ -40,21 +41,16 @@ export default {
   data() {
     return {
       datainForm: {
-        pro_options: [{
-          value: '项目一'
-        },{
-          value: '项目二'
-        }],
         data_options: [{
           value: '文本文件'
         },{
           value: '外部数据库'
         }],
-        pro_value: '',
+        proid: '',
         data_value: ''
       },
       datainFormRules: {
-        pro_value: [
+        proid: [
           { required: true, message: '请选择项目', trigger: 'change' },
         ],
         data_value: [
@@ -67,8 +63,8 @@ export default {
     next() {
       this.$refs.datainFormRef.validate((valid) => {
         if(!valid) return
-        if(this.datainForm.data_value==='文本文件') this.$router.push('/textdatain')
-        if(this.datainForm.data_value==='外部数据库') this.$router.push('/dbin')
+        if(this.datainForm.data_value==='文本文件') this.$router.push(`/textdatain/${this.datainForm.proid}`)
+        if(this.datainForm.data_value==='外部数据库') this.$router.push(`/dbin/${this.datainForm.proid}`)
       })
     }
   }

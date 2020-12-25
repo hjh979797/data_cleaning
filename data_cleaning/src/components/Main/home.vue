@@ -35,7 +35,7 @@
               unique-opened
               router
             >
-              <div class="cate" v-for="item in prolist" :key="item.id">
+              <div class="cate" v-for="item in this.$store.getters.getProList" :key="item.projectId">
                 <Categoryitem :item="item"/>
               </div>
             </el-menu>
@@ -60,20 +60,7 @@ export default {
   data() {
     return{
       //左侧菜单数据
-      prolist: [
-        {id:"1", proName:"项目一", children:[
-            {id:"1", dataName:"数据一"},
-            {id:"2", dataName:"数据二"}
-          ]},
-        {id:"2", proName:"项目二", children:[
-            {id:"1", dataName:"数据一"},
-            {id:"2", dataName:"数据二"},
-            {id:"3", dataName:"数据三"}
-          ]},
-        {id:"3", proName:"项目三", children:[
-            {id:"1", dataName:"数据一"}
-          ]}
-      ],
+      prolist: "",
       // 是开关按下
       isbutton: false,
       visible: false,
@@ -87,13 +74,7 @@ export default {
   },
   // 生命周期函数，加载菜单栏信息
   created() {
-    // this.getMenuList()
-  },
-  // 获取该用户的项目和数据信息
-  async getMenuList() {
-    const {data:res}  = await this.$http.get('menus')
-    if(res.meta.status !== 200) return this.$message.error(res.meta.msg)
-    this.menulist = res.data
+    this.getMenuList()
   },
   methods: {
     create_pro() {
@@ -101,6 +82,21 @@ export default {
     },
     create_data() {
       this.$router.push('/datain')
+    },
+    // 获取该用户的项目和数据信息
+    async getMenuList() {
+      // const {data:res}  = await this.$http.get('/projects')
+      const {data:res}  = await this.$http({
+        url: "/project/projects",
+        headers: {
+          "Authorization": this.$store.getters.getToken
+        },
+        type: "get",
+        dataType: 'json'
+      })
+      if(res.code !== 0) return this.$message.error(res.msg)
+      this.$store.dispatch("uploadProList",res.data)
+      // this.prolist = res.data
     }
   }
 }
