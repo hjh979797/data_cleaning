@@ -106,10 +106,11 @@ export default {
         console.log(res.msg)  // 错误原因
         if(res.code !== 0) return this.$message.error("登录失败!" + res.msg)
         this.$message.success('登录成功')
-        window.sessionStorage.setItem("token", res.data);
-        this.$store.dispatch("setUserInfo", {
+        // window.sessionStorage.setItem("token", res.data);
+        this.$store.dispatch("updatetoken", res.data)
+        this.$store.dispatch("updateuserinfo", {
           mail: this.loginForm.mail,
-          padssword: this.loginForm.password
+          password: this.loginForm.password
         })
         this.$router.push('/home')
       })
