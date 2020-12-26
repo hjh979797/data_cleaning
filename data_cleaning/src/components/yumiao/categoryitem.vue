@@ -11,18 +11,18 @@
       </el-dropdown-menu>
     </el-dropdown>
     <!-- 一级菜单 -->
-    <el-submenu :index="item.id + ''">
+    <el-submenu :index="item.projectId + ''">
       <template slot="title">
         <div v-show="visible_input">
-          <el-input id="input_rename" v-model="item.proName"  ref="mark" @blur="loseblur" v-focus></el-input>
+          <el-input id="input_rename" v-model="item.projectName"  ref="mark" @blur="loseblur" v-focus></el-input>
         </div>
         <div v-show="visible_span">
-          <span>{{ item.proName }}</span>
+          <span>{{ item.projectName }}</span>
         </div>
       </template>
       <!-- 二级菜单 -->
       <el-menu-item-group>
-        <div v-for="subitem in item.children" :key="subitem.id">
+        <div v-for="subitem in item.dataList" :key="subitem.dataId">
           <second-categoryitem :subitem="subitem"/>
         </div>
       </el-menu-item-group>
@@ -44,6 +44,11 @@ export default {
   },
   components:{
     SecondCategoryitem
+  },
+  created() {
+    // var temp = this.$store.getters.getDataMap
+    // var object = eval(temp)
+    console.log(this.$store.getters.getDataMap)
   },
   methods:{
     handleCommand:function(command){

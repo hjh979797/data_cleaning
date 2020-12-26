@@ -1,6 +1,7 @@
 <template>
   <div class="home-container">
     <div class="top"></div>
+    <div class="top-2"></div>
     <div class="main">
       <el-container class="main-container">
         <!-- 头部区域 -->
@@ -15,6 +16,7 @@
             v-model="this.$store.getters.getMail"
             icon="iconfont icon-user"
             class="info"
+            style="color: #fff"
           >{{ ' ' + this.$store.getters.getMail }}</el-button>
         </el-header>
         <!-- 页面主体 -->
@@ -23,19 +25,19 @@
           <el-aside width="300px">
             <!-- 侧边栏按钮 -->
             <div class="btns">
-              <el-button type="primary" size="medium" @click="create_pro"><i class="el-icon-circle-plus el-icon--left"></i>创建项目</el-button>
-              <el-button type="primary" size="medium" @click="create_data"><i class="el-icon-upload el-icon--left"></i>导入数据</el-button>
+              <el-button size="medium" @click="create_pro" ><i class="el-icon-circle-plus el-icon--left"></i>创建项目</el-button>
+              <el-button size="medium" @click="create_data"><i class="el-icon-upload el-icon--left"></i>导入数据</el-button>
             </div>
             <!-- 侧边栏菜单区 -->
             <!-- 最后开起路由模式,根据index跳 -->
             <el-menu
-              background-color="#fff"
-              text-color="#000"
-              active-text-color="#2b3f6b"
+              background-color="#336699"
+              text-color="#fff"
+              active-text-color="#000"
               unique-opened
               router
             >
-              <div class="cate" v-for="item in prolist" :key="item.id">
+              <div class="cate" v-for="item in this.$store.getters.getProList" :key="item.projectId">
                 <Categoryitem :item="item"/>
               </div>
             </el-menu>
@@ -60,20 +62,7 @@ export default {
   data() {
     return{
       //左侧菜单数据
-      prolist: [
-        {id:"1", proName:"项目一", children:[
-            {id:"1", dataName:"数据一"},
-            {id:"2", dataName:"数据二"}
-          ]},
-        {id:"2", proName:"项目二", children:[
-            {id:"1", dataName:"数据一"},
-            {id:"2", dataName:"数据二"},
-            {id:"3", dataName:"数据三"}
-          ]},
-        {id:"3", proName:"项目三", children:[
-            {id:"1", dataName:"数据一"}
-          ]}
-      ],
+      prolist: "",
       // 是开关按下
       isbutton: false,
       visible: false,
@@ -87,13 +76,7 @@ export default {
   },
   // 生命周期函数，加载菜单栏信息
   created() {
-    // this.getMenuList()
-  },
-  // 获取该用户的项目和数据信息
-  async getMenuList() {
-    const {data:res}  = await this.$http.get('menus')
-    if(res.meta.status !== 200) return this.$message.error(res.meta.msg)
-    this.menulist = res.data
+    this.getMenuList()
   },
   methods: {
     create_pro() {
@@ -108,6 +91,21 @@ export default {
     },
     create_data() {
       this.$router.push('/datain')
+    },
+    // 获取该用户的项目和数据信息
+    async getMenuList() {
+      // const {data:res}  = await this.$http.get('/projects')
+      const {data:res}  = await this.$http({
+        url: "/project/projects",
+        headers: {
+          "Authorization": this.$store.getters.getToken
+        },
+        type: "get",
+        dataType: 'json'
+      })
+      if(res.code !== 0) return this.$message.error(res.msg)
+      this.$store.dispatch("uploadProList",res.data)
+      // this.prolist = res.data
     }
   }
 }
@@ -132,6 +130,15 @@ export default {
     filter: Alpha(Opacity=60);
     opacity: 0.6;
   }
+  .top-2 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    opacity: 0.9;
+  }
   .main {
     position: absolute;
     left: 0;
@@ -149,12 +156,12 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
-  opacity: 0.9;
-  color: rgb(90, 39, 170);
+  background-color: #336699;
+  // opacity: 0.9;
+  color: #fff;
   font-size: 25px;
   img {
-    height: 70%;
+    height: 50%;
   }
   > div {
     display: flex;
@@ -166,15 +173,11 @@ export default {
   }
 }
 .el-aside {
-  background-color: #fff;
-  opacity: 0.9;
+  background-color: #336699;
+  // opacity: 0.9;
   .el-menu {
     border-right: none;
   }
-}
-.el-main {
-  background-color: #fff;
-  opacity: 0.9;
 }
 .btns {
   width: 100%;

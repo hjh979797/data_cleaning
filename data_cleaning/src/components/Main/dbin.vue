@@ -133,11 +133,15 @@
 
 <script>
 export default {
+  created() {
+    this.proid = this.$route.params.proid
+  },
   data() {
     var t = (rule, value, callback) => {
       console.log(value)
     }
     return{
+      proid: "",
       dbinfoForm: {
         dbtype: '',
         ServerIP: '',
@@ -238,6 +242,24 @@ export default {
     test() {
       this.$refs.dbinfoFormRef.validate((valid) => {
         if(!valid) return
+        this.$http({
+          url:  "/data/DBTest",
+          methods: "get",
+          params: {
+            DBUrl: 'jdbc:mysql://localhost:3308',
+            User: 'root',
+            Password: '123456'
+          },
+          headers: {
+            Authorization: this.$store.getters.getToken
+          },
+          success: function (msg) {
+            console.log(msg)
+          },
+          error: function(msg){
+            console.log(msg)
+          }
+        })
         this.isshow = true
         this.istest = false
       })
@@ -261,21 +283,24 @@ export default {
   width: 100%;
   height: 100%;
   .box {
-    position: absolute;
+    background-color: #fff;
+    position: relative;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     text-align: right;
+    box-shadow:0 0 9px 3px #336699;
+    height: 100%;
+    width: 30%;
     .look_button{
       position: absolute;
       left: 50%;
       transform: translate(-50%);
-    }
-    .el-select{
-      width: 60%
+      // background-color: #99CCFF;
+      // color: #336699;
     }
     .in_box {
-      margin: 0px;
+      margin: 0px 10px 0px 10px;
       display: flex;
       justify-content: flex-end;
       .el-input {
@@ -287,6 +312,12 @@ export default {
       .el-button{
         position: absolute;
         left: 20%;
+        background-color: #99CCFF;
+        color: #336699;
+      }
+      .el-select{
+        margin-top: 5px;
+        width: 60%
       }
     }
 }

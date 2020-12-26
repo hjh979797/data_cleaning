@@ -11,6 +11,7 @@ import MainShow from '../components/Main/Data/main_show.vue'
 import MainOpra from '../components/Main/Data/main_opra.vue'
 import Create_pro from '../components/Main/Create_pro.vue'
 import Splitcolumns from '../components/yumiao/splitcolumns.vue'
+
 Vue.use(Router)
 
 const router = new Router({
