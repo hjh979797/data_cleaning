@@ -10,7 +10,10 @@
       </el-dropdown-menu>
     </el-dropdown>
     <!-- index指向去处 -->
-    <el-menu-item index="mainshoworopra">
+    <el-menu-item 
+      index = '/mainshoworopra'
+      :route="{ path: `/mainshoworopra/${subitem.dataId}`}">
+      <!-- 根据dataId进入展示数据 -->
       <template slot="title">
         <div v-show="visible_input">
           <el-input id="input_rename" v-model="subitem.dataName"  ref="mark" @blur="loseblur" v-focus></el-input>

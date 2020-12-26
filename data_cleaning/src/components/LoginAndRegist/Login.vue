@@ -100,7 +100,7 @@ export default {
     login() {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
-        const {data: res} = await this.$http.post('/login', this.loginForm);
+        const {data: res} = await this.$http.post('/login', this.loginForm)
         console.log(res.code) // 代号
         console.log(res.data) // token
         console.log(res.msg)  // 错误原因
@@ -112,8 +112,24 @@ export default {
           mail: this.loginForm.mail,
           password: this.loginForm.password
         })
+        this.$http({
+          url: '/project/project',
+          method: "patch",
+          headers: {
+            Authorization: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDkwNDAxNTIsInVzZXJJZCI6IjEwMDAifQ.j3M7M28lCS3Gs7qK4iFe5GpwwbjVoI3ppQ9D7MmyfG0"
+          },
+          data: {
+            projectId: 10000,
+            projectName: "1234565"
+          }
+        }).then(res => {
+          console.log(res)
+        }, error => {
+          console.log("错误；", error.message)
+        })
         this.$router.push('/home')
       })
+      
     }
   }
 }
@@ -168,7 +184,7 @@ export default {
   .left_back {
     width: 100%;
     height: 100%;
-    background-color: #3366cc;
+    background-color: #336699;
     opacity: 0.9; // 透明度
   }
   .left_text {
@@ -226,7 +242,7 @@ export default {
 }
 .login {
   width: 100%;
-  background-color: #3366cc;
+  background-color: #336699;
   margin-top: 15px;
 }
 .zhuce {

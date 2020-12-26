@@ -10,7 +10,22 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      // '/data/import': {
+      //   target: 'http://120.26.162.152:8088/data/import',
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     '^/data/import': ''
+      //   }
+      // },
+      // '/data/importView': {
+      //   target: 'http://120.26.162.152:8088/data/importView',
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     '^/data/importView': ''
+      //   }
+      // },
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

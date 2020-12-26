@@ -65,10 +65,7 @@ export default {
   }
 }
 .btns {
-  position: absolute;
-  bottom: 10%;
-  right: 10%;
-  transform: translate(70%,-50%);
+  float: right;  
 }
 .clearfix:before,
 .clearfix:after {

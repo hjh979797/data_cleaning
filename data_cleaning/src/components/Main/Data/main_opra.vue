@@ -1,5 +1,4 @@
 <template>
-  <div>
     <el-container class="box-container">
       <el-header height="5%"></el-header>
       <el-main><outlier/></el-main>
@@ -7,10 +6,16 @@
     </el-container>
 
 
+<<<<<<< HEAD
     <div>
       <sortitem></sortitem>
     </div>
   </div>
+=======
+    <!-- <div>
+    <fillitem></fillitem>
+    </div> -->
+>>>>>>> dev
 </template>
 
 <script>
@@ -20,14 +25,6 @@ import sortitem from '../../yumiao/sort.vue'
 import outlier from "./Opras/outlierDetection.vue"
 import Sort from '../../yumiao/sort.vue'
 export default {
-  methods: {
-    add:function(amount) {
-      // 最好不要直接修改数据,可以调用mutations中方法
-      // this.$store.commit("add")
-      // 调用actions中的add
-      this.$store.dispatch("add", amount)
-    }
-  },
   components:{
     filteritem,
     fillitem,
@@ -39,10 +36,16 @@ export default {
 
 <style lang="less" scoped>
 .box-container{
+  background-color: #fff;
+  position: relative;
+  top: 2%;
+  right: 2%;
+  left: 2%;
   display: flex;
   flex-flow: column;
-  width: 100%;
-  height: 100%;
+  width: 95%;
+  height: 95%;
+  box-shadow:0 0 9px 3px #336699;
    .el-header{
     // padding: 5px;
     margin-top: 5px;
@@ -55,7 +58,7 @@ export default {
     margin-bottom: 15px;
   }
   .el-main {
-    width: 100%;
+    padding: 15px;
   }
 }
 </style>

@@ -98,10 +98,11 @@ export default {
     regist() {
       this.$refs.registFormRef.validate(async valid => {
         if(!valid) return;
-        const {data: res} = await this.$http.post('/regist', this.registForm);
-        if(res.meta.status !== 200) return console.log('注册失败')
+        const {data: res} = await this.$http.post('/register', { mail: this.registForm.mail,password: this.registForm.password});
+        if(res.code !== 0) return console.log('注册失败')
         console.log('注册成功')
         console.log(res)
+        this.$router.push('/login')
       })
     }
   }
