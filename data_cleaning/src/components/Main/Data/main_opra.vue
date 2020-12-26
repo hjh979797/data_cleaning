@@ -6,16 +6,11 @@
     </el-container>
 
 
-<<<<<<< HEAD
-    <div>
-      <sortitem></sortitem>
-    </div>
-  </div>
-=======
+
     <!-- <div>
     <fillitem></fillitem>
     </div> -->
->>>>>>> dev
+
 </template>
 
 <script>
