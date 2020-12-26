@@ -146,18 +146,19 @@ export default {
   },
   methods: {
     inputData() {
+      let that = this.$router
       this.lookData = false
       this.$http({
-        url: "/data/import",
+        url: '/data/import',
         method: "post",
-        data: {
-          DataName: this.textdatainForm.dataname,
-          FileType: this.fileType,
-          ProjectId: this.proid,
-          ImportColumns: "["+Array.from({length: this.cols.length}, (x, i) => i).join(",")+"]"
-        },
         headers: {
           Authorization: this.$store.getters.getToken
+        },
+        params: {
+          "DataName": this.textdatainForm.dataname,
+          "FileType": this.fileType,
+          "ProjectId": this.proid,
+          "ImportColumns": "["+Array.from({length: this.cols.length}, (x, i) => i).join(",")+"]"
         }
       }).then(res => {
         console.log(res)
@@ -245,15 +246,20 @@ export default {
   width: 100%;
   height: 100%;
   .box {
+    background-color: #fff;
     position: absolute;
-    left: 50%;
+    left: 55%;
     top: 50%;
     transform: translate(-50%, -50%);
     text-align: right;
+    box-shadow:0 0 9px 3px #336699;
+    height: 80%;
     .look_button{
       position: absolute;
       left: 50%;
       transform: translate(-50%);
+      background-color: #99CCFF;
+      color: #336699;
     }
     .in_box {
       margin: 15px;

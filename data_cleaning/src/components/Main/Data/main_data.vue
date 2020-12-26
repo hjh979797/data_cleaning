@@ -1,6 +1,7 @@
 <template>
   <div class="home-container">
       <div class="top"></div>
+      <div class="top-2"></div>
       <div class="main">
         <el-container class="main-container">
 
@@ -16,6 +17,7 @@
               v-model="this.$store.getters.getMail"
               icon="iconfont icon-user"
               class="info"
+              style="color: #fff"
               >{{ ' ' + this.$store.getters.getMail }}</el-button>
           </el-header>
           
@@ -69,6 +71,15 @@ export default {
     filter: Alpha(Opacity=60);
     opacity: 0.6;
   }
+  .top-2 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    opacity: 0.9;
+  }
   .main {
     position: absolute;
     left: 0;
@@ -87,12 +98,11 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
-  opacity: 0.9;
-  color: rgb(90, 39, 170);
+  background-color: #336699;
+  color: #fff;
   font-size: 25px;
   img {
-    height: 70%;
+    height: 50%;
   }
   > div {
     display: flex;
@@ -104,8 +114,6 @@ export default {
   }
 }
 .home-main {
-  background-color: #fff;
-  opacity: 0.9;
   display: flex;
   height: 100%;
   padding: 0;
