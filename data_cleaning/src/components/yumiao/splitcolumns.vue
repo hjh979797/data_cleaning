@@ -22,6 +22,9 @@
           <div>
             <label @click="add">添加字段名</label>
           </div>
+          <div>
+            <el-button @click="split">确定</el-button>
+          </div>
       </div>
   </div>
 </template>
@@ -50,6 +53,11 @@
       this.mylist = this.str.split(",").map(function(item){
         return{val: item};
       });
+      console.log(123)
+      for (var j=0;j<this.mylist.length;j++)
+      {
+        console.log(this.mylist[j].val)
+      }
     },
     methods:{
       add() {
@@ -59,7 +67,14 @@
         this.mylist = this.mylist.filter(
           (currentValue, index) => index != myindex
         );
-      }
+      },
+      split(){
+        this.$http.get('/table/tableName/column',this.mylist).then(function(res){
+          console.log(res);
+        },function(){
+          console.log("请求失败处理");
+        });
+      },
     }
   }
 </script>

@@ -8,8 +8,7 @@
 
 
     <div>
-    <!-- <fillitem></fillitem> -->
-    <filteritem></filteritem>
+      <sortitem></sortitem>
     </div>
   </div>
 </template>
@@ -17,7 +16,9 @@
 <script>
 import filteritem from '../../yumiao/filter.vue'
 import fillitem from '../../yumiao/fill.vue'
+import sortitem from '../../yumiao/sort.vue'
 import outlier from "./Opras/outlierDetection.vue"
+import Sort from '../../yumiao/sort.vue'
 export default {
   methods: {
     add:function(amount) {
@@ -30,7 +31,8 @@ export default {
   components:{
     filteritem,
     fillitem,
-    outlier
+    outlier,
+    sortitem,
   }
 }
 </script>
