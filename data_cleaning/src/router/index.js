@@ -23,8 +23,7 @@ const router = new Router({
       children: [
         { path: '/datain', component: Datain },
         { path: '/textdatain/:proid', component: TextData },
-        { path: '/dbin/:proid', component: DbIn },
-        { path: '/Create_pro', component: Create_pro }
+        { path: '/dbin/:proid', component: DbIn }
       ] //子路由
     },
     { path: '/login', component: Login },
