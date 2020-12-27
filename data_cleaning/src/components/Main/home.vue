@@ -20,34 +20,35 @@
           >{{ ' ' + this.$store.getters.getMail }}</el-button>
         </el-header>
         <!-- 页面主体 -->
-        <el-container>
-          <!-- 侧边栏 -->
-          <el-aside width="300px">
-            <!-- 侧边栏按钮 -->
-            <div class="btns">
-              <el-button size="medium" @click="create_pro" ><i class="el-icon-circle-plus el-icon--left"></i>创建项目</el-button>
-              <el-button size="medium" @click="create_data"><i class="el-icon-upload el-icon--left"></i>导入数据</el-button>
-            </div>
-            <!-- 侧边栏菜单区 -->
-            <!-- 最后开起路由模式,根据index跳 -->
-            <el-menu
-              background-color="#336699"
-              text-color="#fff"
-              active-text-color="#000"
-              unique-opened
-              router
-            >
-              <div class="cate" v-for="item in this.$store.getters.getProList" :key="item.projectId">
-                <Categoryitem :item="item"/>
+        <el-main style="padding:0px">
+          <el-container style="height:100%">
+            <!-- 侧边栏 -->
+            <el-aside width="300px" style="overflow:hidden;">
+              <!-- 侧边栏按钮 -->
+              <div class="btns">
+                <el-button size="medium" @click="create_pro" ><i class="el-icon-circle-plus el-icon--left"></i>创建项目</el-button>
+                <el-button size="medium" @click="create_data"><i class="el-icon-upload el-icon--left"></i>导入数据</el-button>
               </div>
-            </el-menu>
-          </el-aside>
-          <!-- 内容 -->
-          <el-main>
-            <!-- 路由占位符 -->
-            <router-view></router-view>
-          </el-main>
-        </el-container>
+              <!-- 侧边栏菜单区 -->
+              <!-- 最后开起路由模式,根据index跳 -->
+              <el-menu
+                background-color="#336699"
+                text-color="#fff"
+                active-text-color="#000"
+                unique-opened
+                router>
+                <div class="cate" v-for="item in this.$store.getters.getProList" :key="item.projectId">
+                  <Categoryitem :item="item"/>
+                </div>
+              </el-menu>
+            </el-aside>
+            <!-- 内容 -->
+            <el-main>
+              <!-- 路由占位符 -->
+              <router-view></router-view>
+            </el-main>
+          </el-container>
+        </el-main>
       </el-container>
     </div>
   </div>
@@ -177,6 +178,9 @@ export default {
   // opacity: 0.9;
   .el-menu {
     border-right: none;
+    height:100%; 
+    overflow-y:auto; 
+    overflow-x:hidden;
   }
 }
 .btns {

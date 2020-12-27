@@ -60,7 +60,6 @@ export default {
         document.getElementById("input_rename").focus();
         setTimeout(() => {
           this.$refs.mark.$el.querySelector('input').focus();
-
         }, 3);
       }
     },

@@ -46,9 +46,13 @@ export const store = new Vuex.Store({
       //   datas[idx] = JSON.parse(JSON.stringify(item))
       // });
       sessionStorage.setItem("datalist", datas)
-      sessionStorage.setItem("datacol", datalist.tableColumns)
-      state.datacol = datalist.tableColumns
       state.datalist = datas
+      for (var key in datalist.tableColumns){
+        datalist.tableColumns[key].flag = false
+        console.log(datalist.tableColumns[key])
+      }
+      sessionStorage.setItem("datacol", JSON.stringify(datalist.tableColumns))
+      state.datacol = JSON.stringify(datalist.tableColumns)
     },
     pageFix(state, value){
       sessionStorage.setItem("page", value)
@@ -57,6 +61,18 @@ export const store = new Vuex.Store({
     pagesizeFix(state, value){
       sessionStorage.setItem("pagesize", value)
       state.pagesize = value
+    },
+    colstaFix(state, value){
+      let origin = JSON.parse(sessionStorage.getItem("datacol"))
+      for (var key in origin) {
+        if (origin[key].cloumnName === value) {
+          origin[key].flag = !origin[key].flag
+          break
+        }
+      }
+      console.log(origin)
+      sessionStorage.setItem("datacol", JSON.stringify(origin))
+      state.datacol = JSON.stringify(origin)
     }
   },
   // 用于保存计算属性，计算属性：将计算结果缓存，只要数据没有发生变化，只发生一次，以后都使用缓存中数据
@@ -86,7 +102,7 @@ export const store = new Vuex.Store({
       return JSON.parse(state.datalist).slice(start, end)
     },
     getDataCol(state){
-      return state.datacol
+      return JSON.parse(state.datacol)
     }
   },
   // Actions类似于Mutations，提交的是mutations而不是变更当前状态，可以包含任意异步操作
@@ -114,6 +130,9 @@ export const store = new Vuex.Store({
     },
     updataPageSize(context, value) {
       context.commit("pagesizeFix", value)
+    },
+    updateColStatus(context, value) {
+      context.commit("colstaFix", value)
     }
   }
 })

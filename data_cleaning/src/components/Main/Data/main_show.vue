@@ -27,16 +27,20 @@
         <!-- 数据显示 -->
         <el-table
           :data="myData"
-          stripe
           border
           height="100%"
-          style="width: 100%">
+          style="width: 100%"
+          @header-click="colClick">
           
           <el-table-column 
-            v-for="(item, index) in this.$store.getters.getDataCol" 
+            v-for="(val, key, index) in this.$store.getters.getDataCol" 
             :key="index"
-            :prop="item.cloumnName"
-            :label="item.cloumnName">
+            :column-key="val.cloumnName"
+            :prop="val.cloumnName"
+            :label="val.cloumnName"
+            :index="index"
+            :class-name="val.flag? 'bacColorf4984e':''"
+            ref="col">
           </el-table-column>
         </el-table>
       </el-main>
@@ -62,6 +66,7 @@ import splitcolumns from '../../yumiao/splitcolumns.vue'
 export default {
   data() {
     return{
+      colsize: 0,
       tableInfo: {
         tableName: ''
       },
@@ -102,6 +107,7 @@ export default {
         methods: "get"
       })
       if(res.code !== 0) return this.$message.error(" 获取数据失败 ")
+      
       this.$store.dispatch("updateDataList", res.data)
     },
     // 监听 pageSize 改变的事件
@@ -122,7 +128,10 @@ export default {
         this.split_show=true;
         // this.$router.push('/Splitcolumns')
       }
-      
+    },
+    colClick(column,event) {
+      this.$store.dispatch("updateColStatus", column.label)
+      console.log("点击了"+ column.index + "列") 
     }
   }
 }
