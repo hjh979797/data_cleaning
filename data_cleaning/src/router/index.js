@@ -23,8 +23,8 @@ const router = new Router({
       // redirect: '/datain',
       children: [
         { path: '/datain', component: Datain },
-        { path: '/textdatain', component: TextData },
-        { path: '/dbin', component: DbIn },
+        { path: '/textdatain/:proid', component: TextData },
+        { path: '/dbin/:proid', component: DbIn },
         { path: '/Create_pro', component: Create_pro },
         
       ] //子路由
@@ -35,7 +35,7 @@ const router = new Router({
       component: MainData,
       redirect: 'mainshoworopra',
       children: [
-        { path: '/mainshoworopra', components: {
+        { path: '/mainshoworopra/:dataid', components: {
             show: MainShow,
             opra: MainOpra
           },
