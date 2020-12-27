@@ -122,7 +122,7 @@ export default {
       }).then(res=>{
           console.log(res);
           if(res.data.data.length!=0)
-            logid=res.data.data[length-1].logId;
+            logid=res.data.data[res.data.data.length-1].logId;
           this.$http({
           url:'/table/tbl_10000/filter',
           method:"get",
