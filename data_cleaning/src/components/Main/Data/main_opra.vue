@@ -1,15 +1,15 @@
 <template>
-    <el-container class="box-container">
-      <el-header height="5%"></el-header>
-      <el-main><outlier/></el-main>
-      <el-footer height="5%"></el-footer>
-    </el-container>
-
-
-
-    <!-- <div>
-    <fillitem></fillitem>
-    </div> -->
+    <div>
+      <el-container class="box-container">
+        <el-header height="5%"></el-header>
+        <el-main><outlier/></el-main>
+        <el-footer height="5%"></el-footer>
+      </el-container>
+    <div>
+      <!-- <sortitem></sortitem> -->
+      <filteritem></filteritem>
+    </div>
+    </div>
 
 </template>
 

@@ -26,9 +26,9 @@
       </div>
       <div>
         <el-radio-group v-model="radio_group">
-          <el-radio :label="3">开头为</el-radio>
-          <el-radio :label="6">包含</el-radio>
-          <el-radio :label="9">精确匹配</el-radio>
+          <el-radio :label="1">开头为</el-radio>
+          <el-radio :label="2">包含</el-radio>
+          <!-- <el-radio :label="3">精确匹配</el-radio> -->
         </el-radio-group>
       </div>
     </el-radio>
@@ -40,6 +40,7 @@
         </el-radio-group>
       </div>
     </el-radio>
+    <el-button @click="getFilter">确定</el-button>
   </div>
 </template>
 
@@ -47,28 +48,104 @@
 export default {
   data () {
     return {
+      tablename:"tbl_10000",
+      columnname:"name",
       radio: '1',
       choose_radio:'1',
       radio_group:'3',
       radio_null:'0',
       options: [{
-        value: '选项1',
-        label: '黄金糕'
+        value: 'zhangsan',
+        label: 'zhangsan'
       }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
+        value: 'lisi',
+        label: 'lisi'
       }],
       value1:[],
       input:''
+    }
+  },
+  
+  methods:{
+    getFilter:function(){
+      var logid=0;
+      var typetemp;
+      var str="";
+      if(this.radio=='1')
+      {
+        if(this.choose_radio=='1')
+        {
+          typetemp="selected";
+        }
+        else if(this.choose_radio=='2')
+        {
+          typetemp='unSelected';
+        }
+        for(var i=0;i<this.value1.length;i++)
+        {
+          str+=this.value1[i];
+        }
+      }
+      else if(this.radio=='2')
+      {
+        str=this.input;
+        if(this.radio_group=='1')
+        {
+          typetemp='startWith';
+        }
+        else if(this.radio_group=='2')
+        {
+          typetemp='containsWith';
+        }
+      }
+      else if(this.radio=='3')
+      {
+        if(this.radio_null=='0')
+        {
+          typetemp='empty';
+        }
+        else if(this.radio_null=='1')
+        {
+          typetemp='notEmpty';
+        }
+      }
+      console.log(str);
+      this.$http({
+          url:'/table/tbl_10000/logs',
+          method:"get",
+          params:{
+              tableName: "tbl_10000",
+          },
+          headers:{
+              Authorization: this.$store.getters.getToken
+          }
+      }).then(res=>{
+          console.log(res);
+          if(res.data.data.length!=0)
+            logid=res.data.data[length-1].logId;
+          this.$http({
+          url:'/table/tbl_10000/filter',
+          method:"get",
+          params:{
+              tableName: this.tablename,
+              columnName: this.columnname,
+              type:typetemp,
+              values:str,
+              logId: logid,
+          },
+          headers:{
+              Authorization: this.$store.getters.getToken
+          }
+        }).then(res=>{
+          console.log("filter")
+            console.log(res.data.data);
+            this.$store.dispatch("updateDataList", res.data.data)
+        },error=>{
+            console.log("错误：",error.message)
+        });
+      },error=>{
+          console.log("错误：",error.message)
+      });
     }
   }
 }
