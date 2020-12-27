@@ -17,7 +17,9 @@ export const store = new Vuex.Store({
     count: 100,
     prolist: window.sessionStorage.getItem("prolist")||"",
     datalist: window.sessionStorage.getItem("datalist")||"",
-    datacol: window.sessionStorage.getItem("datacol")||""
+    datacol: window.sessionStorage.getItem("datacol")||"",
+    page: window.sessionStorage.getItem("page")||"",
+    pagesize: window.sessionStorage.getItem("pagesize")||""
   },
   // 保存用于修改数据的方法，且可追踪
   mutations: {
@@ -47,6 +49,14 @@ export const store = new Vuex.Store({
       sessionStorage.setItem("datacol", datalist.tableColumns)
       state.datacol = datalist.tableColumns
       state.datalist = datas
+    },
+    pageFix(state, value){
+      sessionStorage.setItem("page", value)
+      state.page = value
+    },
+    pagesizeFix(state, value){
+      sessionStorage.setItem("pagesize", value)
+      state.pagesize = value
     }
   },
   // 用于保存计算属性，计算属性：将计算结果缓存，只要数据没有发生变化，只发生一次，以后都使用缓存中数据
@@ -66,7 +76,14 @@ export const store = new Vuex.Store({
       return state.prolist
     },
     getDataList(state){
-      return JSON.parse(state.datalist)
+      let pagesize = state.pagesize
+      let page = state.page
+      let start = (page-1) * pagesize
+      let end = page * pagesize
+      let len = JSON.parse(state.datalist).length
+      if (end > len) end = len
+      console.log(start + " "+ end)
+      return JSON.parse(state.datalist).slice(start, end)
     },
     getDataCol(state){
       return state.datacol
@@ -91,6 +108,12 @@ export const store = new Vuex.Store({
     },
     updateDataList (context, value) {
       context.commit("datalistFix", value)
+    },
+    updataPage(context, value) {
+      context.commit("pageFix", value)
+    },
+    updataPageSize(context, value) {
+      context.commit("pagesizeFix", value)
     }
   }
 })

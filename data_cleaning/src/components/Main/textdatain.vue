@@ -154,18 +154,33 @@ export default {
         headers: {
           Authorization: this.$store.getters.getToken
         },
-        params: {
-          "DataName": this.textdatainForm.dataname,
-          "FileType": this.fileType,
-          "ProjectId": this.proid,
-          "ImportColumns": "["+Array.from({length: this.cols.length}, (x, i) => i).join(",")+"]"
+        data: {
+          "dataName": this.textdatainForm.dataname,
+          "fileType": this.fileType,
+          "projectId": this.proid,
+          "importColumns": "["+Array.from({length: this.cols.length}, (x, i) => i).join(",")+"]"
         }
       }).then(res => {
         console.log(res)
       }, error => {
         console.log("错误；", error.message)
       })
+      this.getMenuList()
       // this.$router.push('/maindata')
+    },// 获取该用户的项目和数据信息
+    async getMenuList() {
+      // const {data:res}  = await this.$http.get('/projects')
+      const {data:res}  = await this.$http({
+        url: "/project/projects",
+        headers: {
+          "Authorization": this.$store.getters.getToken
+        },
+        type: "get",
+        dataType: 'json'
+      })
+      if(res.code !== 0) return this.$message.error(res.msg)
+      this.$store.dispatch("uploadProList",res.data)
+      // this.prolist = res.data
     },
     justifyLookData() {
       this.$refs.textdatainFormRef.validate((valid) => {

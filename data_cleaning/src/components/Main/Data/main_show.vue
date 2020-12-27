@@ -26,7 +26,7 @@
       <el-main v-show="main_show">
         <!-- 数据显示 -->
         <el-table
-          :data="this.$store.getters.getDataList"
+          :data="myData"
           stripe
           border
           height="100%"
@@ -88,6 +88,8 @@ export default {
   created () {
     this.tableInfo.tableName = "tbl_" + this.$route.params.dataid
     this.getDataList()
+    this.$store.dispatch("updataPageSize", this.queryInfo.pagesize)
+    this.$store.dispatch("updataPage", this.queryInfo.pagenum)
   },
   methods: {
     async getDataList() {
@@ -104,15 +106,13 @@ export default {
     },
     // 监听 pageSize 改变的事件
     handleSizeChange(newSize) {
-      console.log(`每页 ${newsize} 条`)
-      this.queryInfo.pagesize = newSize
-      // this.getDataList()
+      console.log(`每页 ${newSize} 条`)
+      this.$store.dispatch("updataPageSize", newSize)
     },
     // 监听 页码值 改变的事件
     handleCurrentChange(newPage) {
       console.log(`当前页: ${newPage}`)
-      this.queryInfo.pagenum = newPage
-      // this.getDataList()
+      this.$store.dispatch("updataPage", newPage)
     },
     moreopera(command){
       if(command=="splitcolumns")

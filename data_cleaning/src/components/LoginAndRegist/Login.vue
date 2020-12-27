@@ -112,21 +112,6 @@ export default {
           mail: this.loginForm.mail,
           password: this.loginForm.password
         })
-        this.$http({
-          url: '/project/project',
-          method: "patch",
-          headers: {
-            Authorization: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDkwNDAxNTIsInVzZXJJZCI6IjEwMDAifQ.j3M7M28lCS3Gs7qK4iFe5GpwwbjVoI3ppQ9D7MmyfG0"
-          },
-          data: {
-            projectId: 10000,
-            projectName: "1234565"
-          }
-        }).then(res => {
-          console.log(res)
-        }, error => {
-          console.log("错误；", error.message)
-        })
         this.$router.push('/home')
       })
       
