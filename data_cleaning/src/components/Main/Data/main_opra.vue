@@ -7,6 +7,7 @@
       <fillitem v-if="this.$store.getters.getOpraType==='nullFull'"/>
       <sortitem v-if="this.$store.getters.getOpraType==='sort'"/>
       <filteritem v-if="this.$store.getters.getOpraType==='filter'"/>
+      <resetColumnitem v-if="this.$store.getters.getOpraType==='resetColumn'"/>
     </el-main>
     <el-footer height="5%"></el-footer>
   </el-container>
@@ -17,8 +18,8 @@ import filteritem from '../../yumiao/filter.vue'
 import fillitem from '../../yumiao/fill.vue'
 import sortitem from '../../yumiao/sort.vue'
 import outlier from "./Opras/outlierDetection.vue"
-import Sort from '../../yumiao/sort.vue'
 import nullOpra from './Opras/nullOpra.vue'
+import resetColumnitem from '../../yumiao/resetColumn.vue'
 export default {
   components:{
     filteritem,
@@ -26,6 +27,7 @@ export default {
     outlier,
     sortitem,
     nullOpra,
+    resetColumnitem
   }
 }
 </script>

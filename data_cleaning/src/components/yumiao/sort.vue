@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div v-for="(sel, index) in mylist" :key="sel.id">
-            <el-select v-model="sel.value" placeholder="请选择">
+        <div v-for="(sel, index) in mylist" :key="sel.id" style="height:50px">
+            <el-select v-model="sel.value" placeholder="请选择" size="small" style="width:150px">
                 <el-option
                 v-for="item in columnnames"
                 :key="item.val"
@@ -9,7 +9,7 @@
                 :value="item.val">
                 </el-option>
             </el-select>
-            <el-select v-model="sel.rule" placeholder="请选择">
+            <el-select v-model="sel.rule" placeholder="请选择" size="small" style="width:150px">
                 <el-option
                 v-for="item in sortrules"
                 :key="item.val"
@@ -17,10 +17,12 @@
                 :value="item.val">
                 </el-option>
             </el-select>
-            <el-button @click="remove(index)">删除</el-button>
+            <el-button type="danger" icon="el-icon-delete" circle @click="remove(index)" size="small"></el-button>
         </div>
-        <button @click="add">添加</button>
-        <button @click="getsort">提交</button>
+        <div>
+            <el-button type="primary" @click="add" style="margin-left:20%">添加</el-button>
+            <el-button type="success" @click="getsort">提交</el-button>
+        </div>
     </div>
 </template>
 <script>
@@ -113,6 +115,7 @@ export default{
                 }
             }).then(res=>{
                 console.log("排序结果： " + res);
+                this.$store.dispatch("updateDataList", res.data.data)
             },error=>{
                 console.log("错误：",error.message)
             })
@@ -130,3 +133,6 @@ export default{
     }
 }
 </script>
+<style scoped>
+
+</style>
