@@ -33,6 +33,7 @@
             :index="index"
             :class-name="val.flag? 'bacColorf4984e':''"
             ref="col">
+            
           </el-table-column>
         </el-table>
       </el-main>
