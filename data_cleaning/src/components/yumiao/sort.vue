@@ -115,6 +115,7 @@ export default{
                 }
             }).then(res=>{
                 console.log("排序结果： " + res);
+                this.$store.dispatch("updateDataList", res.data.data)
             },error=>{
                 console.log("错误：",error.message)
             })
