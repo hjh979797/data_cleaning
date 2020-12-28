@@ -61,7 +61,7 @@ export default{
             }).then(res=>{
                 if(res.data.data.length!=0)
                 {
-                    logid=res.data.data[0].logId;
+                    logid=res.data.data[res.data.data.length-1].logId;
                 }
                 
             },error=>{

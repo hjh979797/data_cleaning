@@ -12,16 +12,8 @@
             <el-dropdown-item command="splitcolumns" >拆分列</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-dropdown  trigger="click">
-          <el-button class="el-dropdown-link" type="info" round size="mini">
-            日志
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>行列转换</el-dropdown-item>
-            <el-dropdown-item>...</el-dropdown-item>
-            <el-dropdown-item>...</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <!-- 日志 -->
+        <logitem></logitem>
       </el-header>
       <el-main v-show="main_show">
         <!-- 数据显示 -->
@@ -63,6 +55,7 @@
 
 <script>
 import splitcolumns from '../../yumiao/splitcolumns.vue'
+import logitem from '../../yumiao/log.vue'
 export default {
   data() {
     return{
@@ -82,7 +75,8 @@ export default {
     }
   },
   components:{
-    splitcolumns
+    splitcolumns,
+    logitem,
   },
   computed: {
     myData(){
@@ -162,5 +156,16 @@ export default {
   .el-main {
     padding: 15px;
   }
+}
+
+.dialog {
+  position: relative;
+}
+ 
+.close_button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
 }
 </style>
