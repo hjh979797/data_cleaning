@@ -22,8 +22,7 @@
           border
           height="100%"
           style="width: 100%"
-          @header-click="colClick">
-          
+          @header-contextmenu="colClick">
           <el-table-column 
             v-for="(val, key, index) in this.$store.getters.getDataCol" 
             :key="index"
@@ -33,7 +32,22 @@
             :index="index"
             :class-name="val.flag? 'bacColorf4984e':''"
             ref="col">
-            
+            <template slot="header" slot-scope="scope">
+              <div class="wrap" v-contextmenu:contextmenu>
+                {{ val.cloumnName }} 
+                <v-contextmenu ref="contextmenu">
+                      <v-contextmenu-item @click="sortData"><i class="fa fa-search"></i>排序</v-contextmenu-item>
+                      <v-contextmenu-item @click="nullFull"><i class="fa fa-search"></i>空值填充</v-contextmenu-item>
+                      <v-contextmenu-item divider></v-contextmenu-item>
+                      <v-contextmenu-item @click="outlier"><i class="fa fa-search"></i>离群值检测</v-contextmenu-item>
+                      <v-contextmenu-item @click="updateAttr"><i class="fa fa-search"></i>修改字段属性</v-contextmenu-item>
+                      <v-contextmenu-item @click="filter"><i class="fa fa-search"></i>筛选</v-contextmenu-item>
+                      <div class="flag">
+                          <span><i class="fa fa-star"></i></span>
+                      </div>
+                </v-contextmenu>
+              </div>
+            </template>
           </el-table-column>
         </el-table>
       </el-main>
@@ -60,6 +74,7 @@ import logitem from '../../yumiao/log.vue'
 export default {
   data() {
     return{
+      headervisible: false,
       colsize: 0,
       tableInfo: {
         tableName: ''
@@ -90,6 +105,7 @@ export default {
     this.getDataList()
     this.$store.dispatch("updataPageSize", this.queryInfo.pagesize)
     this.$store.dispatch("updataPage", this.queryInfo.pagenum)
+      this.$store.dispatch("updateOpraType", "null")
   },
   methods: {
     async getDataList() {
@@ -125,8 +141,28 @@ export default {
       }
     },
     colClick(column,event) {
+      //禁止鼠标右键菜单
+      document.oncontextmenu = function(e) {
+        return false;
+      };
+      this.headervisible = !this.headervisible
       this.$store.dispatch("updateColStatus", column.label)
       console.log("点击了"+ column.index + "列") 
+    },
+    sortData(){
+      this.$store.dispatch("updateOpraType", "sort")
+    },
+    nullFull(){
+      this.$store.dispatch("updateOpraType", "nullFull")
+    },
+    outlier(){
+      this.$store.dispatch("updateOpraType","outlier")
+    },
+    updateAttr(){
+      this.$store.dispatch("updateOpraType","attr")
+    },
+    filter(){
+      this.$store.dispatch("updateOpraType","filter")
     }
   }
 }
@@ -156,6 +192,11 @@ export default {
   }
   .el-main {
     padding: 15px;
+    .el-button {
+      color: #000;
+      position: relative;
+      width: 100%;
+    }
   }
 }
 
@@ -168,5 +209,9 @@ export default {
   top: 0;
   right: 0;
   transform: translate(50%, -50%);
+}
+.wrap {
+  position: relative;
+  width: 100%;
 }
 </style>

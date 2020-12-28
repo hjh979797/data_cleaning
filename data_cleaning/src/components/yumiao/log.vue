@@ -37,10 +37,9 @@ export default {
                     Authorization: this.$store.getters.getToken
                 }
             }).then(res=>{
-                console.log("日志结果");
-                console.log(res.data);
+                console.log("日志结果: " + res.data);
                 this.loglist=res.data.data;
-                console.log(this.loglist);
+                console.log("日志结果列表: " + this.loglist);
             },error=>{
                 console.log("错误：",error.message)
             })
@@ -56,17 +55,16 @@ export default {
                     Authorization: this.$store.getters.getToken
                 }
             }).then(res=>{
-                console.log("日志结果");
-                console.log(res.data);
+                console.log("日志结果: " + res.data);
                 this.loglist=res.data.data;
-                console.log(this.loglist);
+                console.log("日志结果列表: " + this.loglist);
             },error=>{
                 console.log("错误：",error.message)
             })
         },
         deletelog:function(myindex){
             var deletelogid = this.loglist[myindex].logId;
-            console.log(deletelogid);
+            console.log("删除id： " + deletelogid);
             this.$http({
                 url:'/table/tbl_10000/logs/{deletelogid}',
                 method:"delete",

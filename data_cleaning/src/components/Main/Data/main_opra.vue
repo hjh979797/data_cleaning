@@ -1,16 +1,14 @@
 <template>
-    <div>
-      <el-container class="box-container">
-        <el-header height="5%"></el-header>
-        <el-main><outlier/></el-main>
-        <el-footer height="5%"></el-footer>
-      </el-container>
-    <div>
-      <!-- <sortitem></sortitem> -->
-      <filteritem></filteritem>
-    </div>
-    </div>
-
+  <el-container class="box-container">
+    <el-header height="5%"></el-header>
+    <el-main>
+      <nullOpra v-if="this.$store.getters.getOpraType==='null'"/>
+      <outlier v-if="this.$store.getters.getOpraType==='outlier'"/>
+      <sortitem v-if="this.$store.getters.getOpraType==='sort'"/>
+      <filteritem v-if="this.$store.getters.getOpraType==='filter'"/>
+    </el-main>
+    <el-footer height="5%"></el-footer>
+  </el-container>
 </template>
 
 <script>
@@ -19,12 +17,14 @@ import fillitem from '../../yumiao/fill.vue'
 import sortitem from '../../yumiao/sort.vue'
 import outlier from "./Opras/outlierDetection.vue"
 import Sort from '../../yumiao/sort.vue'
+import nullOpra from './Opras/nullOpra.vue'
 export default {
   components:{
     filteritem,
     fillitem,
     outlier,
     sortitem,
+    nullOpra,
   }
 }
 </script>

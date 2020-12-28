@@ -101,12 +101,11 @@ export default {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
         const {data: res} = await this.$http.post('/login', this.loginForm)
-        console.log(res.code) // 代号
-        console.log(res.data) // token
-        console.log(res.msg)  // 错误原因
+        console.log("代号： " + res.code) // 代号
+        console.log("token： " + res.data) // token
+        console.log("错误原因：" + res.msg)  // 错误原因
         if(res.code !== 0) return this.$message.error("登录失败!" + res.msg)
         this.$message.success('登录成功')
-        // window.sessionStorage.setItem("token", res.data);
         this.$store.dispatch("updatetoken", res.data)
         this.$store.dispatch("updateuserinfo", {
           mail: this.loginForm.mail,

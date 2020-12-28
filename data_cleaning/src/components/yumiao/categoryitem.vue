@@ -46,9 +46,6 @@ export default {
     SecondCategoryitem
   },
   created() {
-    // var temp = this.$store.getters.getDataMap
-    // var object = eval(temp)
-    console.log(this.$store.getters.getDataMap)
   },
   methods:{
     handleCommand:function(command){

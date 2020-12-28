@@ -112,8 +112,7 @@ export default{
                     Authorization: this.$store.getters.getToken
                 }
             }).then(res=>{
-                console.log("排序结果");
-                console.log(res);
+                console.log("排序结果： " + res);
             },error=>{
                 console.log("错误：",error.message)
             })

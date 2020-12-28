@@ -85,9 +85,6 @@ export default {
     this.proid = parseInt(this.$route.params.proid)
   },
   data() {
-    var checkFile = (rule, value, callback) => {
-      console.log(value)
-    }
     return {
       proid: '',
       fileType: "",
@@ -98,7 +95,6 @@ export default {
       },
       textdatainFormRules: {
         upload: [
-          // { validator: checkFile, trigger: 'blur'}
           { required: true, message: '请上传文件', trigger: 'change' }
         ],
         dataname: [
@@ -161,7 +157,7 @@ export default {
           "importColumns": "["+Array.from({length: this.cols.length}, (x, i) => i).join(",")+"]"
         }
       }).then(res => {
-        console.log(res)
+        console.log("导入数据的结果返回： "+res)
       }, error => {
         console.log("错误；", error.message)
       })
@@ -189,7 +185,7 @@ export default {
       })
     },
     handleSuccess(res, file, fileList){
-      console.log(res.data.data)
+      console.log("预览数据的结果返回： " + res.data.data)
       if(res.code !== 0) return
       let datas = res.data.data
       let cols = res.data.columns
@@ -210,8 +206,8 @@ export default {
         if(idx1 < len1-1) datastr += ","
       })
       datastr += "]"
-      console.log(datastr)
-      console.log(JSON.parse(datastr))
+      console.log("预览数据的结果字符串： " + datastr)
+      console.log("字符串转为json: " + JSON.parse(datastr))
       this.gridData = JSON.parse(datastr)
       this.cols = cols
       this.lookData = true

@@ -16,6 +16,11 @@ import axios from 'axios'
 axios.defaults.baseURL = 'http://120.26.162.152:8088'
 // 挂载到vue的原型变量上
 Vue.prototype.$http = axios
+// 右击菜单
+import contentmenu from 'v-contextmenu'
+import 'v-contextmenu/dist/index.css'
+Vue.use(contentmenu)
+
 
 import GlobalIndex from './components/zujian/index.vue'
 Vue.use(GlobalIndex) //引用自定义组件

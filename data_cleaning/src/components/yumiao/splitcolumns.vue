@@ -53,10 +53,9 @@
       this.mylist = this.str.split(",").map(function(item){
         return{val: item};
       });
-      console.log(123)
       for (var j=0;j<this.mylist.length;j++)
       {
-        console.log(this.mylist[j].val)
+        console.log("split值：" + this.mylist[j].val)
       }
     },
     methods:{
@@ -70,7 +69,7 @@
       },
       split(){
         this.$http.get('/table/tableName/column',this.mylist).then(function(res){
-          console.log(res);
+          console.log("分割结果： "+res);
         },function(){
           console.log("请求失败处理");
         });

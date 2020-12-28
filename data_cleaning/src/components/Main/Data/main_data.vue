@@ -45,7 +45,7 @@
 <script>
 export default {
   created() {
-    console.log(this.$route.params.dataid)
+    console.log("数据ID： " + this.$route.params.dataid)
   },
   data() {
     return{

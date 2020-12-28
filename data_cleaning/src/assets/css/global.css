@@ -26,3 +26,48 @@ html, body, #app{
 .bacColorf4984e{
   background: #99CCFF;
 }
+
+.v-contextmenu{
+    padding: 18px 0 5px 0;
+}
+.v-contextmenu .flag{
+    width: 31px;
+    height: 30px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+.v-contextmenu .flag span{
+    width: 65px;
+    height: 24px;
+    line-height: 33px;
+    display: inline-block;
+    text-align: center;
+    transform: rotate(-40deg);
+    background: #007fff;
+    color: #fff;
+    padding-right: 17px;
+    position: relative;
+    left: -20px;
+    top: -14px;
+}
+.v-contextmenu .flag span i{
+    color: #fff;
+}
+.v-contextmenu .v-contextmenu-item{
+    width: 90px;
+    height: 24px;
+}
+.v-contextmenu .v-contextmenu-item:hover{
+    background: #f4f5f6;
+    border-left: 3px solid #007FFF;
+    color: #65778b;
+    font-weight: 600;
+}
+.v-contextmenu .v-contextmenu-item:hover i{
+    color: #65778b;
+}
+.v-contextmenu .v-contextmenu-item i{
+    padding-right: 10px;
+}
