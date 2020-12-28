@@ -5,7 +5,10 @@
           </el-button>
           <el-dropdown-menu  slot="dropdown">
             <el-dropdown-item v-for="(log,index) in loglist" :key="index">
-              <div>{{log.title}}<el-button type="primary" size="mini" icon="el-icon-delete" class="deletebutton" @click="deletelog(index)"></el-button></div>
+              <div>
+                  <label>{{log.title}}</label>
+                  <el-button type="primary" size="mini" icon="el-icon-delete" class="deletebutton" @click="deletelog(index)"></el-button>
+            </div>
             </el-dropdown-item>
             <!-- <el-dropdown-item>...</el-dropdown-item>
             <el-dropdown-item>...</el-dropdown-item> -->
