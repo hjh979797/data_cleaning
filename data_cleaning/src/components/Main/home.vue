@@ -37,7 +37,7 @@
                 active-text-color="#000"
                 unique-opened
                 router>
-                <div class="cate" v-for="item in this.$store.getters.getProList" :key="item.projectId">
+                <div class="cate" v-for="(item, key, index) in this.$store.getters.getProList" :key="index">
                   <Categoryitem :item="item"/>
                 </div>
               </el-menu>
@@ -69,7 +69,8 @@ export default {
       visible: false,
       dialogTableVisible: false,
       dialogFormVisible: false,
-      formLabelWidth: '120px'
+      formLabelWidth: '120px',
+      isCreate: false
     }
   },
   components:{
@@ -81,14 +82,14 @@ export default {
   },
   methods: {
     create_pro() {
-      // this.$router.push('/create_pro')
-      var len = this.prolist.length;
-      console.log(len)
-      this.prolist.push(
-        {id:len+1, proName:"项目"+len, children:[
-          ]}
-      )
-
+      let newPro = {
+        createTime: '',
+        dataList: [],
+        projectId: -1,
+        projectName: '',
+        userId: this.$store.getters.getToken
+      }
+      this.$store.dispatch("createPro", newPro)
     },
     create_data() {
       this.$router.push('/datain')

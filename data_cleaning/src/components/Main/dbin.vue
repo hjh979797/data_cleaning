@@ -68,11 +68,11 @@
         <div class="in_box">
           <label style="margin: 10px">数据库</label>
           <el-form-item prop="db">
-            <el-select v-model="dbinForm.db" placeholder="请选择">
+            <el-select v-model="dbinfoForm.db" placeholder="请选择" @change="select_db">
               <el-option
-                v-for="item in dbinForm.db_options"
-                :key="item.value"
-                :value="item.value">
+                v-for="(val, key, index) in dbinForm.dbInfo"
+                :key="index"
+                :value="val.dbName">
               </el-option>
             </el-select>
           </el-form-item>
@@ -82,9 +82,10 @@
           <el-form-item prop="tablename">
             <el-select v-model="dbinForm.tablename" placeholder="请选择">
               <el-option
-                v-for="item in dbinForm.table_options"
-                :key="item.value"
-                :value="item.value">
+                v-for="(val, key, index) in dbinForm.tbInfo"
+                :key="index"
+                :value="val"
+                :label="val">
               </el-option>
             </el-select>
           </el-form-item>
@@ -117,9 +118,12 @@
         </el-header>
         <el-main>
           <el-table :data="gridData">
-            <el-table-column property="date" label="日期" width="150"></el-table-column>
-            <el-table-column property="name" label="姓名" width="200"></el-table-column>
-            <el-table-column property="address" label="地址"></el-table-column>
+            <el-table-column 
+              v-for="(item, index) in cols"
+              :key="index"
+              :prop="item" 
+              :label="item">
+            </el-table-column>
           </el-table>
         </el-main>
         <el-footer>
@@ -137,9 +141,6 @@ export default {
     this.proid = this.$route.params.proid
   },
   data() {
-    var t = (rule, value, callback) => {
-      console.log(value)
-    }
     return{
       proid: "",
       dbinfoForm: {
@@ -176,16 +177,8 @@ export default {
         ]
       },
       dbinForm: {
-        db_options: [{
-          value: '数据库1'
-        },{
-          value: '数据库2'
-        }],
-        table_options: [{
-          value: '表1'
-        },{
-          value: '表2'
-        }],
+        dbInfo: [],
+        tbInfo: [],
         dataname: '',
         db: '',
         tablename: ''
@@ -235,10 +228,23 @@ export default {
       istest: true,
       issuccess: true,
       isshow: false,
-      lookData: false
+      lookData: false,
+      selectedDb: -1,
+      cols: []
     }
   },
   methods: {
+    select_db(data) {
+      console.log("选中值为"+this.$refs.selectDbRef)
+      console.log(data)
+      for(var item in this.dbinForm.dbInfo){
+        if(this.dbinForm.dbInfo[item].dbName === data){
+          this.dbinForm.db = this.dbinForm.dbInfo[item].dbName
+          this.dbinForm.tbInfo = this.dbinForm.dbInfo[item].tbName
+          break
+        }
+      }
+    },
     test() {
       this.$refs.dbinfoFormRef.validate((valid) => {
         if(!valid) return
@@ -246,32 +252,130 @@ export default {
           url:  "/data/DBTest",
           methods: "get",
           params: {
-            DBUrl: 'jdbc:mysql://localhost:3308',
-            User: 'root',
-            Password: '123456'
+            // DBIP: this.dbinfoForm.ServerIP,
+            // User: this.dbinfoForm.username,
+            // Password: this.dbinfoForm.password
+            DBIP: "212.64.87.241",
+            User: "huangjiahui",
+            Password: "Hyp123456!"
           },
           headers: {
             Authorization: this.$store.getters.getToken
-          },
-          success: function (msg) {
-            console.log(msg)
-          },
-          error: function(msg){
-            console.log(msg)
           }
+        }).then(res => {
+          console.log("数据库测试结果返回： ")
+          let dbForm = []
+          for(var item in res.data.data) {
+            let dic = {}
+            dic['dbName'] = item
+            dic['tbName'] = res.data.data[item]
+            dbForm.push(dic)
+          }
+          console.log("整理后的数据： ")
+          console.log(dbForm)
+          this.dbinForm.dbInfo = dbForm
+          this.isshow = true
+          this.istest = false
+        }, error => {
+          console.log("错误；", error.message)
         })
-        this.isshow = true
-        this.istest = false
       })
     },
     inputData() {
+      let that = this.$router
       this.lookData = false
-      this.$router.push('/maindata')
+      this.$http({
+        url: '/data/DBImport',
+        method: "post",
+        headers: {
+          Authorization: this.$store.getters.getToken
+        },
+        data: {
+          // DBIP: this.dbinfoForm.ServerIP,
+          // User: this.dbinfoForm.username,
+          // Password: this.dbinfoForm.password
+          DBIP: "212.64.87.241",
+          user: "huangjiahui",
+          password: "Hyp123456!",
+          DBName: this.dbinForm.db,
+          tableName: this.dbinForm.tablename,
+          dataName: this.dbinForm.dataname,
+          projectId: this.proid,
+          importColumns: "["+Array.from({length: this.cols.length}, (x, i) => i).join(",")+"]"
+        }
+      }).then(res => {
+        console.log("导入数据的结果返回： ")
+        console.log(res.data.data)
+        let newDataId = res.data.data.dataId
+        this.$router.push(`/mainshoworopra/${newDataId}`)
+      }, error => {
+        console.log("错误；", error.message)
+      })
+      this.getMenuList()
+    },// 获取该用户的项目和数据信息
+    async getMenuList() {
+      // const {data:res}  = await this.$http.get('/projects')
+      const {data:res}  = await this.$http({
+        url: "/project/projects",
+        headers: {
+          "Authorization": this.$store.getters.getToken
+        },
+        type: "get",
+        dataType: 'json'
+      })
+      if(res.code !== 0) return this.$message.error(res.msg)
+      this.$store.dispatch("uploadProList",res.data)
+      // this.prolist = res.data
     },
     justifyLookData() {
       this.$refs.dbinFormRef.validate((valid) => {
         if(!valid) return
-        this.lookData = true
+        this.$http({
+          url:'/data/DBImportView',
+          method: 'get',
+          params: {
+            TableName: this.dbinForm.tablename,
+            // DBIP: this.dbinfoForm.ServerIP,
+            // User: this.dbinfoForm.username,
+            // Password: this.dbinfoForm.password
+            DBIP: "212.64.87.241",
+            User: "huangjiahui",
+            Password: "Hyp123456!",
+            DBName: this.dbinForm.db
+          },
+          headers: {
+            Authorization: this.$store.getters.getToken
+          }
+        }).then(res => {
+          console.log("预览数据库结果返回： ")
+          if(res.data.code !== 0) return
+          let datas = res.data.data.data
+          let cols = res.data.data.columns
+          let datastr = "["
+          let len1 = datas.length
+          let len2 = cols.length
+          datas.forEach((element1,idx1)=>{
+            datastr += "{"
+            cols.forEach((element2,idx2) => {
+              datastr += "\""
+              datastr += element2+""
+              datastr += "\":\""
+              datastr += element1[idx2]
+              datastr += "\""
+              if(idx2 < len2-1) datastr += ","
+            })
+            datastr += "}"
+            if(idx1 < len1-1) datastr += ","
+          })
+          datastr += "]"
+          console.log("预览数据的结果字符串： " + datastr)
+          console.log("字符串转为json: " + JSON.parse(datastr))
+          this.gridData = JSON.parse(datastr)
+          this.cols = cols
+          this.lookData = true
+        }, error => {
+          console.log("错误；", error.message)
+        })
       })
     }
   }

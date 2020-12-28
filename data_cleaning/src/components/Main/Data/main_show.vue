@@ -105,7 +105,7 @@ export default {
     this.getDataList()
     this.$store.dispatch("updataPageSize", this.queryInfo.pagesize)
     this.$store.dispatch("updataPage", this.queryInfo.pagenum)
-      this.$store.dispatch("updateOpraType", "null")
+    this.$store.dispatch("updateOpraType", "null")
   },
   methods: {
     async getDataList() {
