@@ -159,7 +159,7 @@ export default {
       this.$store.dispatch("updateOpraType","outlier")
     },
     updateAttr(){
-      this.$store.dispatch("updateOpraType","attr")
+      this.$store.dispatch("updateOpraType","resetColumn")
     },
     filter(){
       this.$store.dispatch("updateOpraType","filter")
