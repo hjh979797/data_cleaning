@@ -157,7 +157,10 @@ export default {
           "importColumns": "["+Array.from({length: this.cols.length}, (x, i) => i).join(",")+"]"
         }
       }).then(res => {
-        console.log("导入数据的结果返回： "+res)
+        console.log("导入数据的结果返回： ")
+        console.log(res.data.data)
+        let newDataId = res.data.data.dataId
+        this.$router.push(`/mainshoworopra/${newDataId}`)
       }, error => {
         console.log("错误；", error.message)
       })

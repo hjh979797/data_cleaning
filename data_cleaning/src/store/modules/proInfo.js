@@ -41,6 +41,28 @@ const mutations = {
     console.log("修改列状态结果： " + origin)
     sessionStorage.setItem("datacol", JSON.stringify(origin))
     state.datacol = JSON.stringify(origin)
+  },
+  renameProFix(state, value) {
+    let originData = state.prolist
+    for(var item in originData){
+      if(originData[item].projectId === value.projectId){
+        originData[item].projectName = value.projectName
+      }
+    }
+    sessionStorage.setItem("prolist", originData)
+    state.prolist = originData
+  },
+  delPro(state, value) {
+    let originData = state.prolist
+    let newData = originData.filter((e => { return e.projectId !== value }))
+    sessionStorage.setItem("prolist", newData)
+    state.prolist = newData
+  },
+  createPro(state, value) {
+    let originData = state.prolist
+    originData.push(value)
+    console.log("新增后： ")
+    console.log(originData)
   }
 }
 
@@ -81,6 +103,15 @@ const actions = {
   },
   updateColStatus(context, value) {
     context.commit("colstaFix", value)
+  },
+  renamePro(context, value) {
+    context.commit("renameProFix", value)
+  },
+  delPro(context, value) {
+    context.commit("delPro", value)
+  },
+  createPro(context, value) {
+    context.commit("createPro", value)
   }
 }
 

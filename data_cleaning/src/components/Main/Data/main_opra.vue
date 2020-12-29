@@ -4,6 +4,7 @@
     <el-main>
       <nullOpra v-if="this.$store.getters.getOpraType==='null'"/>
       <outlier v-if="this.$store.getters.getOpraType==='outlier'"/>
+      <fillitem v-if="this.$store.getters.getOpraType==='nullFull'"/>
       <sortitem v-if="this.$store.getters.getOpraType==='sort'"/>
       <filteritem v-if="this.$store.getters.getOpraType==='filter'"/>
       <resetColumnitem v-if="this.$store.getters.getOpraType==='resetColumn'"/>

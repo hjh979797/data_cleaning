@@ -1,5 +1,6 @@
 <template>
-  <div class="menuone" v:bind:item>
+  <!-- <div class="menuone" v:bind:item> -->
+  <div class="menuone">
     <!-- <el-dropdown @command="handleCommand" trigger="click"> -->
     <el-dropdown @command="handleCommand" trigger="click">
       <span class="el-dropdown-link">
@@ -14,7 +15,7 @@
     <el-submenu :index="item.projectId + ''">
       <template slot="title">
         <div v-show="visible_input">
-          <el-input id="input_rename" v-model="item.projectName"  ref="mark" @blur="loseblur" v-focus></el-input>
+          <el-input id="input_rename" v-model="input_name"  ref="mark" @blur="loseblur" v-focus></el-input>
         </div>
         <div v-show="visible_span">
           <span>{{ item.projectName }}</span>
@@ -33,19 +34,34 @@
 import SecondCategoryitem from './secondCategoryitem.vue'
 
 export default {
-  props: [
-    'item'
-  ],
+  props: {
+    item: {}
+  },
   data(){
     return {
       visible_span:true,
       visible_input:false,
+      input_name: ''
     }
   },
   components:{
     SecondCategoryitem
   },
   created() {
+    if(typeof(this.item)==="object"){
+      console.log(this.item.iscreate)
+      if(this.item.projectId!==-1){
+        this.visible_span=true
+        this.visible_input=false
+      }else{
+        this.visible_span=false
+        this.visible_input=true
+        document.getElementById("input_rename").focus();
+        setTimeout(() => {
+          this.$refs.mark.$el.querySelector('input').focus();
+        }, 3);
+      }
+    }
   },
   methods:{
     handleCommand:function(command){
@@ -58,12 +74,79 @@ export default {
         setTimeout(() => {
           this.$refs.mark.$el.querySelector('input').focus();
         }, 3);
+      }else if(command=='del'){
+          this.$http({
+            url: "/project/deleteProject",
+            method: "post",
+            params: {
+              "projectId": this.item.projectId
+            },
+            headers: {
+              Authorization: this.$store.getters.getToken
+            },
+          }).then(res => {
+            console.log("删除的结果返回： ")
+            console.log(res)
+          }, error => {
+            console.log("错误；", error.message)
+          })
+          this.$store.dispatch("delPro", this.item.projectId)
       }
     },
     loseblur:function(){
       console.log("sdkfas")
       this.visible_input=false;
       this.visible_span=true;
+      console.log(this.item.projectName)
+      if(typeof(this.item)==="object"){
+        if(this.item.projectId!==-1){
+          // 重命名
+          let projectInfoDto = {
+            projectId: this.item.projectId,
+            projectName: this.input_name
+          }
+          // 先改store
+          this.$store.dispatch("renamePro", projectInfoDto)
+          this.$http({
+            url: "/project/renameProject",
+            method: "post",
+            data: {
+              projectId: this.item.projectId,
+              projectName: this.input_name
+            },
+            headers: {
+              Authorization: this.$store.getters.getToken
+            },
+          }).then(res => {
+            console.log("重命名的结果返回： ")
+            console.log(res)
+          }, error => {
+            console.log("错误；", error.message)
+          })
+        }else{
+          // 创建
+          this.$http({
+            url: "/project/project",
+            method: "post",
+            params: {
+              "ProjectName": this.input_name
+            },
+            headers: {
+              Authorization: this.$store.getters.getToken
+            },
+          }).then(res => {
+            console.log("创建项目的结果返回： ")
+            console.log(res.data.data)
+            let newPro = res.data.data
+            newPro.dataList = []
+            this.$store.dispatch("delPro", -1)
+            this.$store.dispatch("createPro", newPro)
+            console.log("新项目： " + newPro)
+          }, error => {
+            console.log("错误；", error.message)
+          })
+        }
+      }
     }
   },
   directives: {
