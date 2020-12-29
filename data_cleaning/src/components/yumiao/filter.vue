@@ -154,11 +154,14 @@ export default {
           console.log("filter")
             console.log(res.data.data);
             this.$store.dispatch("updateDataList", res.data.data)
+            alert("筛选完成");
         },error=>{
             console.log("错误：",error.message)
+            alert("错误：",error.message)
         });
       },error=>{
           console.log("错误：",error.message)
+          alert("错误：",error.message)
       });
     }
   }

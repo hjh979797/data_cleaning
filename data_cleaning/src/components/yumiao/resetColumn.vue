@@ -2,11 +2,12 @@
     <div>
         <div>
             <label>当前列名</label>
-            <input v-model="columnname" :disabled="true" style="margin-left:10%">
+            <!-- <input placeholder="columnname" :disabled="true" style="margin-left:10%"> -->
+            <input :placeholder="this.$store.getters.getCurrentCol" :disabled="true" style="margin-left:10%">
         </div>
         <div>
             <label for="newcolumnname">新列名</label>
-            <input id="newcolumnname" v-model="newcolumnname" placeholder="请输入新字段名" style="margin-left:15%">
+            <input id="newcolumnname" v-model="newcolumnname" :placeholder="this.$store.getters.getCurrentCol" style="margin-left:15%">
         </div>
         <div>
             <label>数据类型</label>
@@ -43,20 +44,26 @@ export default {
             value: 'varchar',
             }],
             value:"",
-            tablename:"tbl_10000",
+            tablename:"",
             columnname:"age",
             newcolumnname:"",
             columnLength:""
         }
     },
+    created() {
+        // this.columnname=this.$store.getters.getCurrentCol;
+        // this.newcolumnname=this.$store.getters.getCurrentCol;
+        this.tablename="tbl_"+this.$route.params.dataid;
+        console.log(this.tablename);
+    },
     methods:{
         reset:function(){
             var logid=0;
             this.$http({
-            url:'/table/tbl_10000/logs',
+            url:'/table/{this.tablename}/logs',
             method:"get",
             params:{
-                tableName: "tbl_10000",
+                tableName: this.tablename,
             },
             headers:{
                 Authorization: this.$store.getters.getToken
@@ -66,7 +73,7 @@ export default {
                 if(res.data.data.length!=0)
                     logid=res.data.data[res.data.data.length-1].logId;
                 this.$http({
-                url:'/table/tbl_10000/column',
+                url:'/table/{this.tablename}/column',
                 method:"get",
                 params:{
                     tableName: this.tablename,

@@ -74,6 +74,7 @@ import logitem from '../../yumiao/log.vue'
 export default {
   data() {
     return{
+      currentCol: 0,
       headervisible: false,
       colsize: 0,
       tableInfo: {
@@ -147,6 +148,9 @@ export default {
       };
       this.headervisible = !this.headervisible
       this.$store.dispatch("updateColStatus", column.label)
+      this.currentCol = column.columnKey
+      console.log("column:")
+      console.log(column.columnKey)
       console.log("点击了"+ column.index + "列") 
     },
     sortData(){
@@ -159,6 +163,7 @@ export default {
       this.$store.dispatch("updateOpraType","outlier")
     },
     updateAttr(){
+      this.$store.dispatch("getColName", this.currentCol)
       this.$store.dispatch("updateOpraType","resetColumn")
     },
     filter(){
