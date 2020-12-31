@@ -23,7 +23,7 @@ export default {
         }
     },
    created (){
-        this.getloglist();
+        // this.getloglist();
     },
     methods:{
         getloglist(){

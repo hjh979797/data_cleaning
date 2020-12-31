@@ -15,41 +15,25 @@
         <!-- 日志 -->
         <logitem></logitem>
       </el-header>
-      <el-main v-show="main_show">
+      <el-main v-show="main_show" style="padding:0px;overflow-y:hidden;overflow-x:hidden;">
         <!-- 数据显示 -->
-        <el-table
-          :data="myData"
+        <vxe-grid
           border
-          height="100%"
-          style="width: 100%"
-          @header-contextmenu="colClick">
-          <el-table-column 
-            v-for="(val, key, index) in this.$store.getters.getDataCol" 
-            :key="index"
-            :column-key="val.cloumnName"
-            :prop="val.cloumnName"
-            :label="val.cloumnName"
-            :index="index"
-            :class-name="val.flag? 'bacColorf4984e':''"
-            ref="col">
-            <template slot="header" slot-scope="scope">
-              <div class="wrap" v-contextmenu:contextmenu>
-                {{ val.cloumnName }} 
-                <v-contextmenu ref="contextmenu">
-                      <v-contextmenu-item @click="sortData"><i class="fa fa-search"></i>排序</v-contextmenu-item>
-                      <v-contextmenu-item @click="nullFull"><i class="fa fa-search"></i>空值填充</v-contextmenu-item>
-                      <v-contextmenu-item divider></v-contextmenu-item>
-                      <v-contextmenu-item @click="outlier"><i class="fa fa-search"></i>离群值检测</v-contextmenu-item>
-                      <v-contextmenu-item @click="updateAttr"><i class="fa fa-search"></i>修改字段属性</v-contextmenu-item>
-                      <v-contextmenu-item @click="filter"><i class="fa fa-search"></i>筛选</v-contextmenu-item>
-                      <div class="flag">
-                          <span><i class="fa fa-star"></i></span>
-                      </div>
-                </v-contextmenu>
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
+          column-key
+          round
+          stripe
+          height="auto"
+          ref="dragtable"
+          class="sortable-column-demo"
+          highlight-current-column
+          :columns="this.$store.getters.getDataCol"
+          :data="myData"
+          empty-text="没有更多数据了！"
+          :edit-config="{trigger: 'dblclick', mode: 'cell'}"
+          :menu-config="tableMenu"
+          @header-cell-menu="cellContextMenuEvent"
+          @cell-menu="cellContextMenuEvent"
+          @menu-click="contextMenuClickEvent"/>
       </el-main>
       <splitcolumns v-show="split_show"></splitcolumns>
 
@@ -69,11 +53,41 @@
 </template>
 
 <script>
+import Sortable from "sortablejs"
 import splitcolumns from '../../yumiao/splitcolumns.vue'
 import logitem from '../../yumiao/log.vue'
 export default {
   data() {
     return{
+      tableMenu: {
+        header: {
+          options: [
+            [
+              { code: 'sortData', name: '排序', prefixIcon: 'fa fa-copy', visible: true, disabled: false },
+              { code: 'nullFull', name: '空值填充', visible: true, disabled: false },
+              { code: 'outlier', name: '离群值检测', visible: true, disabled: false }
+            ],
+            [
+              { code: 'updateAttr', name: '修改字段属性', prefixIcon: 'fa fa-print', visible: true, disabled: false },
+              { code: 'filter', name: '筛选', prefixIcon: 'fa fa-download', visible: true, disabled: false }
+            ]
+          ]
+        },
+        body: {
+          options: [
+            [
+              { code: 'sortData', name: '排序', prefixIcon: 'fa fa-copy', visible: true, disabled: false },
+              { code: 'nullFull', name: '空值填充', visible: true, disabled: false },
+              { code: 'outlier', name: '离群值检测', visible: true, disabled: false }
+            ],
+            [
+              { code: 'updateAttr', name: '修改字段属性', prefixIcon: 'fa fa-print', visible: true, disabled: false },
+              { code: 'filter', name: '筛选', prefixIcon: 'fa fa-download', visible: true, disabled: false }
+            ]
+          ]
+        },
+        visibleMethod: this.visibleMethod
+      },
       headervisible: false,
       colsize: 0,
       tableInfo: {
@@ -101,15 +115,94 @@ export default {
   },
   // 生命周期函数，创建时候加载数据
   created () {
+    this.$store.getters.getDataCol
     this.tableInfo.tableName = "tbl_" + this.$route.params.dataid
     this.getDataList()
     this.$store.dispatch("updataPageSize", this.queryInfo.pagesize)
     this.$store.dispatch("updataPage", this.queryInfo.pagenum)
     this.$store.dispatch("updateOpraType", "null")
+    this.setDragTable();
+  },
+  beforeDestroy () {
+    if (this.dragtable) {
+      this.dragtable.destroy()
+    }
   },
   methods: {
+    visibleMethod ({ type, options, column }) {
+      // 示例：只有 name 列允许操作，清除按钮只能在 age 才显示
+      // 显示之前处理按钮的操作权限
+      let isDisabled = !column || column.property !== 'name'
+      let isVisible = column && column.property === 'age'
+      options.forEach(list => {
+        list.forEach(item => {
+          if (['copy'].includes(item.code)) {
+            item.disabled = isDisabled
+          }
+          if (['clear'].includes(item.code)) {
+            item.visible = isVisible
+          }
+        })
+      })
+      return true
+    },
+    cellContextMenuEvent ({ column }) {
+      this.$refs.dragtable.setCurrentColumn(column)
+    },
+    contextMenuClickEvent ({ menu, row, column }) {
+      let xGrid = this.$refs.dragtable
+      switch (menu.code) {
+        case 'sortData':
+          this.$store.dispatch("updateOpraType", "sort")
+          break
+        case 'nullFull':
+          this.$store.dispatch("updateOpraType", "nullFull")
+          break
+        case 'outlier':
+         this.$store.dispatch("updateOpraType","outlier")
+          break
+        case 'updateAttr':
+          this.$store.dispatch("updateOpraType","resetColumn")
+          break
+        case 'filter':
+          this.$store.dispatch("updateOpraType","filter")
+          break
+      }
+    },
+    setDragTable() {
+      this.$nextTick (() => {
+        const xTable = this.$refs.dragtable
+        this.sortable2 = Sortable.create(xTable.$el.querySelector('.body--wrapper>.vxe-table--header .vxe-header--row'), {
+          handle: '.vxe-header--column:not(.col--fixed)',
+          onEnd: ({ item, newIndex, oldIndex }) => {
+            const { fullColumn, tableColumn } = xTable.getTableColumn()
+            console.log("原来的列：")
+            console.log(tableColumn)
+            console.log(fullColumn)
+            const targetThElem = item
+            const wrapperElem = targetThElem.parentNode
+            const newColumn = fullColumn[newIndex]
+            if (newColumn.fixed) {
+              // 错误的移动
+              if (newIndex > oldIndex) {
+                wrapperElem.insertBefore(targetThElem, wrapperElem.children[oldIndex])
+              } else {
+                wrapperElem.insertBefore(wrapperElem.children[oldIndex], targetThElem)
+              }
+              return this.$XModal.message({ message: '固定列不允许拖动！', status: 'error' })
+            }
+            // 转换真实索引
+            const oldColumnIndex = xTable.getColumnIndex(tableColumn[oldIndex])
+            const newColumnIndex = xTable.getColumnIndex(tableColumn[newIndex])
+            // 移动到目标列
+            const currRow = fullColumn.splice(oldColumnIndex, 1)[0]
+            fullColumn.splice(newColumnIndex, 0, currRow)
+            xTable.loadColumn(fullColumn)
+          }
+        })
+      })
+    },
     async getDataList() {
-      // 根据当前页数以及每页显示数据来获取该页数据
       const {data: res} =  await this.$http({
         url:"/table/"+this.tableInfo.tableName,
         headers: {

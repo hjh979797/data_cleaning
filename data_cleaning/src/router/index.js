@@ -14,7 +14,9 @@ import Splitcolumns from '../components/yumiao/splitcolumns.vue'
 Vue.use(Router)
 
 const router = new Router({
+  mode: 'history',
   routes: [
+    // { path: '*', component: NotFoundComponent },
     { path: '/', redirect: '/home' }, // 重定向路由规则,自动跳转到登陆页面
     {
       path: '/home',

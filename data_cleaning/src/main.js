@@ -20,7 +20,19 @@ Vue.prototype.$http = axios
 import contentmenu from 'v-contextmenu'
 import 'v-contextmenu/dist/index.css'
 Vue.use(contentmenu)
-
+// 表格
+import 'xe-utils'
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css'
+// 挂载vxe表格内部对象
+ Vue.use(VXETable)
+Vue.prototype.$XModal = VXETable.modal
+Vue.prototype.$XPrint = VXETable.print
+Vue.prototype.$XSaveFile = VXETable.saveFile
+Vue.prototype.$XReadFile = VXETable.readFile
+// 拖拽
+// import Sortable from 'sortablejs'
+// Vue.use(Sortable)
 
 import GlobalIndex from './components/zujian/index.vue'
 Vue.use(GlobalIndex) //引用自定义组件

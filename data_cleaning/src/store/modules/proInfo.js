@@ -84,7 +84,25 @@ const getters = {
     return JSON.parse(state.datalist).slice(start, end)
   },
   getDataCol(state) {
-    return JSON.parse(state.datacol)
+    console.log("test: ")
+    // field 列字段名
+    // title 标题
+    // 列宽度 width
+    // minWidth 最小宽度
+    let tableColumn = []
+    let cols = JSON.parse(state.datacol)
+    for(var col in cols) {
+      let name = cols[col].cloumnName
+      let dic = {field: name}
+      dic['title'] = name
+      dic['width'] = "auto"
+      dic['minWidth'] = "100px"
+      dic['resizable'] = true
+      tableColumn.push(dic)
+    }
+    console.log(tableColumn)
+    return tableColumn
+    // return JSON.parse(state.datacol)
   }
 }
 
