@@ -115,7 +115,6 @@ export default {
   },
   // 生命周期函数，创建时候加载数据
   created () {
-    this.$store.getters.getDataCol
     this.tableInfo.tableName = "tbl_" + this.$route.params.dataid
     this.getDataList()
     this.$store.dispatch("updataPageSize", this.queryInfo.pagesize)
@@ -132,18 +131,18 @@ export default {
     visibleMethod ({ type, options, column }) {
       // 示例：只有 name 列允许操作，清除按钮只能在 age 才显示
       // 显示之前处理按钮的操作权限
-      let isDisabled = !column || column.property !== 'name'
-      let isVisible = column && column.property === 'age'
-      options.forEach(list => {
-        list.forEach(item => {
-          if (['copy'].includes(item.code)) {
-            item.disabled = isDisabled
-          }
-          if (['clear'].includes(item.code)) {
-            item.visible = isVisible
-          }
-        })
-      })
+      // let isDisabled = !column || column.property !== 'name'
+      // let isVisible = column && column.property === 'age'
+      // options.forEach(list => {
+      //   list.forEach(item => {
+      //     if (['copy'].includes(item.code)) {
+      //       item.disabled = isDisabled
+      //     }
+      //     if (['clear'].includes(item.code)) {
+      //       item.visible = isVisible
+      //     }
+      //   })
+      // })
       return true
     },
     cellContextMenuEvent ({ column }) {
