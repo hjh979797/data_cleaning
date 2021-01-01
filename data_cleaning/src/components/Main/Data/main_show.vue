@@ -29,6 +29,7 @@
           :columns="this.$store.getters.getDataCol"
           :data="myData"
           empty-text="没有更多数据了！"
+          :loading="this.$store.getters.getLoading"
           :edit-config="{trigger: 'dblclick', mode: 'cell'}"
           :menu-config="tableMenu"
           @header-cell-menu="cellContextMenuEvent"
@@ -115,6 +116,8 @@ export default {
   },
   // 生命周期函数，创建时候加载数据
   created () {
+    this.$store.dispatch("setLoad", true)
+    this.$store.dispatch("updateDataList", null)
     this.tableInfo.tableName = "tbl_" + this.$route.params.dataid
     this.getDataList()
     this.$store.dispatch("updataPageSize", this.queryInfo.pagesize)
@@ -212,6 +215,7 @@ export default {
       if(res.code !== 0) return this.$message.error(" 获取数据失败 ")
       
       this.$store.dispatch("updateDataList", res.data)
+      this.$store.dispatch("setLoad", false)
     },
     // 监听 pageSize 改变的事件
     handleSizeChange(newSize) {

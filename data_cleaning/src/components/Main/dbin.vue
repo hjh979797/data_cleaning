@@ -246,9 +246,9 @@ export default {
       }
     },
     test() {
-      this.$refs.dbinfoFormRef.validate((valid) => {
+      this.$refs.dbinfoFormRef.validate(async valid => {
         if(!valid) return
-        this.$http({
+        await this.$http({
           url:  "/data/DBTest",
           methods: "get",
           params: {
@@ -281,10 +281,10 @@ export default {
         })
       })
     },
-    inputData() {
+    async inputData() {
       let that = this.$router
       this.lookData = false
-      this.$http({
+      await this.$http({
         url: '/data/DBImport',
         method: "post",
         headers: {
@@ -329,9 +329,9 @@ export default {
       // this.prolist = res.data
     },
     justifyLookData() {
-      this.$refs.dbinFormRef.validate((valid) => {
+      this.$refs.dbinFormRef.validate(async valid => {
         if(!valid) return
-        this.$http({
+        await this.$http({
           url:'/data/DBImportView',
           method: 'get',
           params: {

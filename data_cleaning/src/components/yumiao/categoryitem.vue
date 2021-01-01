@@ -136,6 +136,10 @@ export default {
             },
           }).then(res => {
             console.log("创建项目的结果返回： ")
+            if(res.data.code==500301){
+              this.$store.dispatch("delPro", -1)
+              return this.$message.error("失败："+res.data.msg)
+            }
             console.log(res.data.data)
             let newPro = res.data.data
             newPro.dataList = []

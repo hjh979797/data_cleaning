@@ -3,7 +3,8 @@ const state = {
   datalist: window.sessionStorage.getItem("datalist") || "",
   datacol: window.sessionStorage.getItem("datacol") || "",
   page: window.sessionStorage.getItem("page") || "",
-  pagesize: window.sessionStorage.getItem("pagesize") || ""
+  pagesize: window.sessionStorage.getItem("pagesize") || "",
+  loading: window.sessionStorage.getItem("loading") || ""
 }
 
 const mutations = {
@@ -12,6 +13,13 @@ const mutations = {
     state.prolist = prolist
   },
   datalistFix(state, datalist) {
+    if(datalist===null) {
+      sessionStorage.setItem("datalist", null)
+      sessionStorage.setItem("datacol", null)
+      state.datalist = null
+      state.datacol = null
+      return;
+    }
     let datas = JSON.stringify(datalist.tableData)
     sessionStorage.setItem("datalist", datas)
     state.datalist = datas
@@ -63,17 +71,23 @@ const mutations = {
     originData.push(value)
     console.log("新增后： ")
     console.log(originData)
+  },
+  setLoading(state, value){
+    sessionStorage.setItem("loading", value)
+    state.loading = value
   }
 }
 
 const getters = {
   dataListSize(state) {
+    if(state.datalist===null) return 0
     return JSON.parse(state.datalist).length
   },
   getProList(state) {
     return state.prolist
   },
   getDataList(state) {
+    if(state.datalist===null) return []
     let pagesize = state.pagesize
     let page = state.page
     let start = (page - 1) * pagesize
@@ -84,6 +98,7 @@ const getters = {
     return JSON.parse(state.datalist).slice(start, end)
   },
   getDataCol(state) {
+    if (state.datacol === null) return []
     console.log("test: ")
     // field 列字段名
     // title 标题
@@ -103,6 +118,9 @@ const getters = {
     console.log(tableColumn)
     return tableColumn
     // return JSON.parse(state.datacol)
+  },
+  getLoading(state) {
+    return state.loading
   }
 }
 
@@ -130,6 +148,9 @@ const actions = {
   },
   createPro(context, value) {
     context.commit("createPro", value)
+  },
+  setLoad(context, value) {
+    context.commit("setLoading", value)
   }
 }
 

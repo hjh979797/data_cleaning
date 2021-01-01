@@ -101,3 +101,9 @@ html, body, #app{
 .sortable-column-demo .vxe-header--row .vxe-header--column.sortable-chosen {
   background-color: #dfecfb;
 }
+
+.vxe-grid.is--loading > .vxe-table .vxe-loading {
+  background-color: transparent; 
+  position: relative;
+  top: 250px;
+  left: 0;}
