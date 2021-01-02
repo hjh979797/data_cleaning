@@ -60,7 +60,7 @@ export default {
         reset:function(){
             var logid=0;
             this.$http({
-            url:'/table/{this.tablename}/logs',
+            url:'/table/'+this.tablename+'/logs',
             method:"get",
             params:{
                 tableName: this.tablename,
