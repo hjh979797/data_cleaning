@@ -45,16 +45,25 @@ export default {
             }],
             value:"",
             tablename:"",
-            columnname:"age",
+            columnname:"",
             newcolumnname:"",
-            columnLength:""
+            columnLength:"",
         }
     },
     created() {
-        // this.columnname=this.$store.getters.getCurrentCol;
-        // this.newcolumnname=this.$store.getters.getCurrentCol;
         this.tablename="tbl_"+this.$route.params.dataid;
-        console.log(this.tablename);
+        this.columnname=this.$store.getters.getCurrentCol;
+        this.newcolumnname=this.$store.getters.getCurrentCol;
+    },
+    computed:{
+        myNewcolumnname(){
+            return this.$store.getters.getCurrentCol
+        },
+    },
+    watch:{
+        myNewcolumnname(newName, oldName){
+            this.newcolumnname=newName;
+        }
     },
     methods:{
         reset:function(){
@@ -69,11 +78,10 @@ export default {
                 Authorization: this.$store.getters.getToken
             }
             }).then(res=>{
-                console.log(res);
                 if(res.data.data.length!=0)
                     logid=res.data.data[res.data.data.length-1].logId;
                 this.$http({
-                url:'/table/{this.tablename}/column',
+                url:'/table/'+this.tablename+'/column',
                 method:"get",
                 params:{
                     tableName: this.tablename,

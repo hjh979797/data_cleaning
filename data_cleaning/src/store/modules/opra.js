@@ -8,7 +8,7 @@ const mutations = {
     sessionStorage.setItem('opratype', value)
     state.opratype = value
   },
-  setColName(state, value) {
+  setCurrentCol(state, value) {
     sessionStorage.setItem("ColName", value)
     state.ColName = value
   }
@@ -27,8 +27,8 @@ const actions = {
   updateOpraType(context, value) {
     context.commit('opratypeFix', value)
   },
-  setResetCol(context, value) {
-    context.commit("setColName", value)
+  setCurrentCol(context, value) {
+    context.commit("setCurrentCol", value)
   }
 }
 

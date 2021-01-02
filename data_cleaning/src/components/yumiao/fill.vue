@@ -1,21 +1,6 @@
 <template>
   <div>
     <div class="header">
-      <div>
-        <label>空行数</label>
-        <label class="shownum">{{bankcounter}}</label>
-      </div>
-      <br/>
-      <div>
-        <label>总行数</label><label class="shownum">{{totalcounter}}</label>
-        <el-switch class="right"
-        v-model="value"
-        active-color="#13ce66"
-        inactive-color="#ff4949">
-      </el-switch>
-      </div>
-    </div>
-    <div class="header">
       <div class="box">
         <el-radio v-model="radio" label="1">固定值填充</el-radio>
         <el-input class="rightinput" v-model="input" placeholder="请输入内容"></el-input>
@@ -44,7 +29,7 @@
       </div>
     </div>
   <div>
-    <el-button @click="fill">提交</el-button>
+    <el-button type="success" @click="fill" style="margin:35%">提交</el-button>
   </div>
   </div>
 </template>
@@ -56,9 +41,9 @@ export default {
   data(){
     return{
       form: {
-        columnName: 12,
-        type: "123",
-        logId:  "12"
+        columnName:"",
+        type: "",
+        logId: ","
       },
       bankcounter: 0,
       totalcounter:0,
@@ -98,7 +83,7 @@ export default {
   methods:{
     fill:function(){
         //发送get请求
-        this.$http.get('/table/tableName/fill',this.form).then(function(res){
+        this.$http.get('/table/'+this.tablename+'/fill',this.form).then(function(res){
             console.log(res);
         },function(){
             console.log('请求失败处理');
@@ -109,7 +94,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .header{
-  border: 1px solid;
+  // border: 1px solid;
   display: flex;
   flex-flow: column;
   // justify-content: flex-end;
@@ -122,12 +107,16 @@ export default {
   margin-left: 100px;
 }
 .rightinput{
-  margin-right: 0px;
+  margin-right: 10px;
   width: 150px;
   
 }
+label{
+  margin: 15px;
+}
 .box {
-  border: solid;
+  // border: solid;
+  margin-top: 15px;
   display: flex;
   justify-content: space-between;
 }

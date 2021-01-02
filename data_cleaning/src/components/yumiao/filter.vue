@@ -62,8 +62,8 @@
 export default {
   data () {
     return {
-      tablename:"tbl_10000",
-      columnname:"name",
+      tablename:"",
+      columnname:"",
       radio: '1',
       choose_radio:'1',
       radio_group:'3',
@@ -79,7 +79,20 @@ export default {
       input:''
     }
   },
-  
+  created() {
+        this.tablename="tbl_"+this.$route.params.dataid;
+        this.columnname=this.$store.getters.getCurrentCol;
+    },
+  computed:{
+      mycolumnname(){
+          return this.$store.getters.getCurrentCol;
+      },
+  },
+  watch:{
+      mycolumnname(newName, oldName){
+          this.columnname=newName;
+      }
+  },
   methods:{
     getFilter:function(){
       var logid=0;
@@ -95,8 +108,14 @@ export default {
         {
           typetemp='unSelected';
         }
+        var flag=0;
         for(var i=0;i<this.value1.length;i++)
         {
+          if(flag==1)
+          {
+            str+=",";
+          }
+          flag=1; 
           str+=this.value1[i];
         }
       }
@@ -124,21 +143,22 @@ export default {
         }
       }
       console.log(str);
+      console.log(this.columnname)
       this.$http({
-          url:'/table/tbl_10000/logs',
+          url:'/table/'+this.tablename+'/logs',
           method:"get",
           params:{
-              tableName: "tbl_10000",
+              tableName: this.tablename,
           },
           headers:{
               Authorization: this.$store.getters.getToken
           }
       }).then(res=>{
-          console.log(res);
           if(res.data.data.length!=0)
             logid=res.data.data[res.data.data.length-1].logId;
+          console.log(logid)
           this.$http({
-          url:'/table/tbl_10000/filter',
+          url:'/table/'+this.tablename+'/filter',
           method:"get",
           params:{
               tableName: this.tablename,
@@ -152,9 +172,9 @@ export default {
           }
         }).then(res=>{
           console.log("filter")
-            console.log(res.data.data);
-            this.$store.dispatch("updateDataList", res.data.data)
-            alert("筛选完成");
+          console.log(res.data.data);
+          this.$store.dispatch("updateDataList", res.data.data)
+          alert("筛选完成");
         },error=>{
             console.log("错误：",error.message)
             alert("错误：",error.message)

@@ -30,32 +30,47 @@ export default{
     data(){
         return{
             columnnames:[],
+            str:"",
             value_coulunmname:"",
             sortrules:[],
             value_sortrule:"",
-            str:"name,age",
             rules:"升序,降序",
             mylist:[{id:1,value:"", rule:""}],
             value_columnnames:[],
             value_sortrules:[],
+            tablename:"",
         }
     },
     mounted(){
+        var tempcol=this.$store.getters.getDataCol;
+        var flag=0;
+        for(var i=0;i<tempcol.length;i++)
+        {
+            if(flag==1)
+            {
+                this.str+=",";
+            }
+            flag=1;
+            this.str+=tempcol[i].field;
+        }
         this.columnnames=this.str.split(",").map(function(item){
-        return{val: item};
-      });
+            return{val: item};
+        });
+        console.log(this.columnnames)
+  
       this.sortrules=this.rules.split(",").map(function(item){
         return{val: item};
       });
+      this.tablename = "tbl_"+this.$route.params.dataid;
     },
     methods:{
         getsort:function(){
             var logid=0;
             this.$http({
-                url:'/table/tbl_10000/logs',
+                url:'/table/'+this.tablename+'/logs',
                 method:"get",
                 params:{
-                    tableName: "tbl_10000",
+                    tableName: this.tablename,
                 },
                 headers:{
                     Authorization: this.$store.getters.getToken
@@ -103,10 +118,10 @@ export default{
                 rules+=columnnametemp+","+ruletemp;
              }
              this.$http({
-                url:'/table/tbl_10000/sort',
+                url:'/table/'+this.tablename+'/sort',
                 method:"get",
                 params:{
-                    tableName: "tbl_10000",
+                    tableName: this.tablename,
                     rules: rules,
                     logId:logid,
                 },

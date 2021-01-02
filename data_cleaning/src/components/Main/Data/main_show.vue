@@ -159,15 +159,19 @@ export default {
           break
         case 'nullFull':
           this.$store.dispatch("updateOpraType", "nullFull")
+          this.$store.dispatch("setCurrentCol",column.property)
           break
         case 'outlier':
          this.$store.dispatch("updateOpraType","outlier")
           break
         case 'updateAttr':
           this.$store.dispatch("updateOpraType","resetColumn")
+          this.$store.dispatch("setCurrentCol",column.property)
+          console.log(column.property)
           break
         case 'filter':
           this.$store.dispatch("updateOpraType","filter")
+          this.$store.dispatch("setCurrentCol",column.property)
           break
       }
     },
