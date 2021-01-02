@@ -141,10 +141,10 @@ export default {
     }
   },
   methods: {
-    inputData() {
+    async inputData() {
       let that = this.$router
       this.lookData = false
-      this.$http({
+      await this.$http({
         url: '/data/import',
         method: "post",
         headers: {

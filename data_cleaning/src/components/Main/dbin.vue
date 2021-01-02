@@ -246,9 +246,9 @@ export default {
       }
     },
     test() {
-      this.$refs.dbinfoFormRef.validate((valid) => {
+      this.$refs.dbinfoFormRef.validate(async valid => {
         if(!valid) return
-        this.$http({
+        await this.$http({
           url:  "/data/DBTest",
           methods: "get",
           params: {
@@ -281,10 +281,10 @@ export default {
         })
       })
     },
-    inputData() {
+    async inputData() {
       let that = this.$router
       this.lookData = false
-      this.$http({
+      await this.$http({
         url: '/data/DBImport',
         method: "post",
         headers: {
@@ -300,11 +300,12 @@ export default {
           DBName: this.dbinForm.db,
           tableName: this.dbinForm.tablename,
           dataName: this.dbinForm.dataname,
-          projectId: this.proid,
-          importColumns: "["+Array.from({length: this.cols.length}, (x, i) => i).join(",")+"]"
+          importColumns: "["+Array.from({length: this.cols.length}, (x, i) => i).join(",")+"]",
+          projectId: parseInt(this.proid)
         }
       }).then(res => {
-        console.log("导入数据的结果返回： ")
+        console.log("导入数据库数据的最终结果返回： ")
+        console.log(res)
         console.log(res.data.data)
         let newDataId = res.data.data.dataId
         this.$router.push(`/mainshoworopra/${newDataId}`)
@@ -328,9 +329,9 @@ export default {
       // this.prolist = res.data
     },
     justifyLookData() {
-      this.$refs.dbinFormRef.validate((valid) => {
+      this.$refs.dbinFormRef.validate(async valid => {
         if(!valid) return
-        this.$http({
+        await this.$http({
           url:'/data/DBImportView',
           method: 'get',
           params: {

@@ -179,7 +179,7 @@ export default {
   // opacity: 0.9;
   .el-menu {
     border-right: none;
-    height:100%; 
+    height:90%; 
     overflow-y:auto; 
     overflow-x:hidden;
   }
@@ -189,6 +189,7 @@ export default {
   margin: 10px;
   display: flex;
   justify-content: flex-start;
+  height: 6%;
 }
 .menuone {
   display: flex;
