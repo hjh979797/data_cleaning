@@ -35,27 +35,23 @@
 </template>
 
 <script>
-import filter from './filter.vue'
 export default {
-  components: { filter },
   data(){
     return{
-      form: {
-        columnName:"",
-        type: "",
-        logId: ","
-      },
-      bankcounter: 0,
-      totalcounter:0,
+      tablename:"",
+      columnname:"",
       value: true,
       input:"",
       options: [{
-          value: '选项1',
+          value: 'average',
           label: '平均值填充'
+        }, {
+          value: 'median',
+          label: '中位数填充'
         }, {
           value: '选项2',
           label: '最小值填充'
-        }, {
+        },{
           value: '选项3',
           label: '最大值填充'
         }, {
@@ -80,14 +76,75 @@ export default {
         radio:'1'
     }
   },
+   created() {
+        this.tablename="tbl_"+this.$route.params.dataid;
+        this.columnname=this.$store.getters.getCurrentCol;
+    },
+  computed:{
+      mycolumnname(){
+          return this.$store.getters.getCurrentCol;
+      },
+  },
+  watch:{
+      mycolumnname(newName, oldName){
+          this.columnname=newName;
+      }
+  },
   methods:{
     fill:function(){
-        //发送get请求
-        this.$http.get('/table/'+this.tablename+'/fill',this.form).then(function(res){
-            console.log(res);
-        },function(){
-            console.log('请求失败处理');
+      var logid=0;
+      var value="";
+      var type="";
+      switch(this.radio){
+        case "1":
+          type="given"
+          value=this.input;
+          break;
+        case "2":
+          type=this.value1;
+          value=this.value1;
+          break;
+        case "3":
+          type=this.value2;
+          value=this.value2;
+          break;
+      }
+      this.$http({
+          url:'/table/'+this.tablename+'/logs',
+          method:"get",
+          params:{
+              tableName: this.tablename,
+          },
+          headers:{
+              Authorization: this.$store.getters.getToken
+          }
+      }).then(res=>{
+          if(res.data.data.length!=0)
+          {
+              logid=res.data.data[res.data.data.length-1].logId;
+          }
+          this.$http({
+            url:'/table/'+this.tablename+'/fill',
+            method:"get",
+            params:{
+                tableName: this.tablename,
+                columnName: this.columnname,
+                value: value,
+                type: type,
+                logId:logid,
+            },
+            headers:{
+                Authorization: this.$store.getters.getToken
+            }
+        }).then(res=>{
+            console.log("排序结果： " + res);
+            this.$store.dispatch("updateDataList", res.data.data)
+        },error=>{
+            console.log("错误：",error.message)
         });
+      },error=>{
+          console.log("错误：",error.message)
+      });
     }
   }
 }

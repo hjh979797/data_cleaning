@@ -156,6 +156,7 @@ export default {
       switch (menu.code) {
         case 'sortData':
           this.$store.dispatch("updateOpraType", "sort")
+          this.$store.dispatch("setCurrentCol",column.property)
           break
         case 'nullFull':
           this.$store.dispatch("updateOpraType", "nullFull")
