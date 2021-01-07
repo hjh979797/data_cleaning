@@ -95,11 +95,13 @@ const getters = {
     let len = JSON.parse(state.datalist).length
     if (end > len) end = len
     console.log("起始和终点数据： " + start + " " + end)
+    console.log("所有数据: ")
+    console.log(JSON.parse(state.datalist))
     return JSON.parse(state.datalist).slice(start, end)
   },
   getDataCol(state) {
     if (state.datacol === null) return []
-    console.log("test: ")
+    // console.log("标题格式: ")
     // field 列字段名
     // title 标题
     // 列宽度 width
@@ -115,7 +117,7 @@ const getters = {
       dic['resizable'] = true
       tableColumn.push(dic)
     }
-    console.log(tableColumn)
+    // console.log(tableColumn)
     return tableColumn
     // return JSON.parse(state.datacol)
   },
