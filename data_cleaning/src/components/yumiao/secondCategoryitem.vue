@@ -16,7 +16,7 @@
       <!-- 根据dataId进入展示数据 -->
       <template slot="title">
         <div v-show="visible_input">
-          <el-input id="input_rename" v-model="subitem.dataName"  ref="mark" @blur="loseblur" v-focus></el-input>
+          <el-input id="input_rename" v-model="subitem.dataName"  ref="mark" @change="loseblur" v-focus></el-input>
         </div>
         <div v-show="visible_span">
           <span>{{subitem.dataName }}</span>
@@ -48,6 +48,24 @@ export default {
           this.$refs.mark.$el.querySelector('input').focus();
         }, 3);
       }
+      // else if(command=='del'){
+      //     this.$http({
+      //       url: "/project/deleteProject",
+      //       method: "post",
+      //       params: {
+      //         "projectId": this.item.projectId
+      //       },
+      //       headers: {
+      //         Authorization: this.$store.getters.getToken
+      //       },
+      //     }).then(res => {
+      //       console.log("删除的结果返回： ")
+      //       console.log(res)
+      //     }, error => {
+      //       console.log("错误；", error.message)
+      //     })
+      //     this.$store.dispatch("delPro", this.item.projectId)
+      // }
     },
     loseblur:function(){
       console.log("sdkfas")

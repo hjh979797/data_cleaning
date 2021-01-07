@@ -156,18 +156,23 @@ export default {
       switch (menu.code) {
         case 'sortData':
           this.$store.dispatch("updateOpraType", "sort")
+          this.$store.dispatch("setCurrentCol",column.property)
           break
         case 'nullFull':
           this.$store.dispatch("updateOpraType", "nullFull")
+          this.$store.dispatch("setCurrentCol",column.property)
           break
         case 'outlier':
          this.$store.dispatch("updateOpraType","outlier")
           break
         case 'updateAttr':
           this.$store.dispatch("updateOpraType","resetColumn")
+          this.$store.dispatch("setCurrentCol",column.property)
+          console.log(column.property)
           break
         case 'filter':
           this.$store.dispatch("updateOpraType","filter")
+          this.$store.dispatch("setCurrentCol",column.property)
           break
       }
     },
@@ -243,6 +248,9 @@ export default {
       };
       this.headervisible = !this.headervisible
       this.$store.dispatch("updateColStatus", column.label)
+      this.currentCol = column.columnKey
+      console.log("column:")
+      console.log(column.columnKey)
       console.log("点击了"+ column.index + "列") 
     },
     sortData(){
@@ -255,6 +263,7 @@ export default {
       this.$store.dispatch("updateOpraType","outlier")
     },
     updateAttr(){
+      this.$store.dispatch("getColName", this.currentCol)
       this.$store.dispatch("updateOpraType","resetColumn")
     },
     filter(){

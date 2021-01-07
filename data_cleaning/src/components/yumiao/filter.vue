@@ -11,7 +11,7 @@
                 <el-radio v-model="choose_radio" label="2" name="choose">清除</el-radio>
               </div>
               <label>选择字段</label>
-              <el-select v-model="value1" multiple placeholder="请选择" style="width:160px">
+              <el-select v-model="value1" multiple placeholder="请选择" style="width:160px" >
                 <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -62,8 +62,8 @@
 export default {
   data () {
     return {
-      tablename:"tbl_10000",
-      columnname:"name",
+      tablename:"",
+      columnname:"",
       radio: '1',
       choose_radio:'1',
       radio_group:'3',
@@ -79,8 +79,42 @@ export default {
       input:''
     }
   },
-  
+  created() {
+        this.tablename="tbl_"+this.$route.params.dataid;
+        this.columnname=this.$store.getters.getCurrentCol;
+        var tempdata = this.$store.getters.getData;
+        this.setOptions(tempdata);
+    },
+  computed:{
+      mycolumnname(){
+          return this.$store.getters.getCurrentCol;
+      },
+      getvaluetochoose(){
+       return this.$store.getters.getData;
+    },
+  },
+  watch:{
+      mycolumnname(newName, oldName){
+          this.columnname=newName;
+          this.setOptions()
+      },
+      getvaluetochoose(newData, oldData){
+       this.setOptions()
+    },
+  },
   methods:{
+    setOptions:function(){
+      var tempdata = this.$store.getters.getData;
+      var tempoption=new Set;
+      this.options.splice(0,this.options.length);
+      for(let i=0;i<tempdata.length;i++)
+      {
+        tempoption.add(tempdata[i][this.columnname]);
+      }
+      for (let [key, value] of tempoption.entries()){
+        this.options.push({value,value})
+      }
+    },
     getFilter:function(){
       var logid=0;
       var typetemp;
@@ -95,8 +129,14 @@ export default {
         {
           typetemp='unSelected';
         }
+        var flag=0;
         for(var i=0;i<this.value1.length;i++)
         {
+          if(flag==1)
+          {
+            str+=",";
+          }
+          flag=1; 
           str+=this.value1[i];
         }
       }
@@ -124,21 +164,22 @@ export default {
         }
       }
       console.log(str);
+      console.log(this.columnname)
       this.$http({
-          url:'/table/tbl_10000/logs',
+          url:'/table/'+this.tablename+'/logs',
           method:"get",
           params:{
-              tableName: "tbl_10000",
+              tableName: this.tablename,
           },
           headers:{
               Authorization: this.$store.getters.getToken
           }
       }).then(res=>{
-          console.log(res);
           if(res.data.data.length!=0)
             logid=res.data.data[res.data.data.length-1].logId;
+          console.log(logid)
           this.$http({
-          url:'/table/tbl_10000/filter',
+          url:'/table/'+this.tablename+'/filter',
           method:"get",
           params:{
               tableName: this.tablename,
@@ -152,13 +193,16 @@ export default {
           }
         }).then(res=>{
           console.log("filter")
-            console.log(res.data.data);
-            this.$store.dispatch("updateDataList", res.data.data)
+          console.log(res.data.data);
+          this.$store.dispatch("updateDataList", res.data.data)
+          alert("筛选完成");
         },error=>{
             console.log("错误：",error.message)
+            alert("错误：",error.message)
         });
       },error=>{
           console.log("错误：",error.message)
+          alert("错误：",error.message)
       });
     }
   }

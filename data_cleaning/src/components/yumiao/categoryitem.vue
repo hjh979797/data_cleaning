@@ -15,7 +15,7 @@
     <el-submenu :index="item.projectId + ''">
       <template slot="title">
         <div v-show="visible_input">
-          <el-input id="input_rename" v-model="input_name"  ref="mark" @blur="loseblur" v-focus></el-input>
+          <el-input id="input_rename" v-model="input_name"  ref="mark" @change="loseblur" v-focus></el-input>
         </div>
         <div v-show="visible_span">
           <span>{{ item.projectName }}</span>

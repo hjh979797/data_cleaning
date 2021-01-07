@@ -86,6 +86,9 @@ const getters = {
   getProList(state) {
     return state.prolist
   },
+  getData(state){
+    return JSON.parse(state.datalist)
+  },
   getDataList(state) {
     if(state.datalist===null) return []
     let pagesize = state.pagesize
