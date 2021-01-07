@@ -11,7 +11,7 @@
                 <el-radio v-model="choose_radio" label="2" name="choose">清除</el-radio>
               </div>
               <label>选择字段</label>
-              <el-select v-model="value1" multiple placeholder="请选择" style="width:160px">
+              <el-select v-model="value1" multiple placeholder="请选择" style="width:160px" >
                 <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -82,18 +82,39 @@ export default {
   created() {
         this.tablename="tbl_"+this.$route.params.dataid;
         this.columnname=this.$store.getters.getCurrentCol;
+        var tempdata = this.$store.getters.getData;
+        this.setOptions(tempdata);
     },
   computed:{
       mycolumnname(){
           return this.$store.getters.getCurrentCol;
       },
+      getvaluetochoose(){
+       return this.$store.getters.getData;
+    },
   },
   watch:{
       mycolumnname(newName, oldName){
           this.columnname=newName;
-      }
+          this.setOptions()
+      },
+      getvaluetochoose(newData, oldData){
+       this.setOptions()
+    },
   },
   methods:{
+    setOptions:function(){
+      var tempdata = this.$store.getters.getData;
+      var tempoption=new Set;
+      this.options.splice(0,this.options.length);
+      for(let i=0;i<tempdata.length;i++)
+      {
+        tempoption.add(tempdata[i][this.columnname]);
+      }
+      for (let [key, value] of tempoption.entries()){
+        this.options.push({value,value})
+      }
+    },
     getFilter:function(){
       var logid=0;
       var typetemp;

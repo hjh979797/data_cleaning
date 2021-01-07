@@ -1,6 +1,7 @@
 const state = {
   opratype: window.sessionStorage.getItem("opratype") || "",
-  ColName: window.sessionStorage.getItem("ColName") || ""
+  ColName: window.sessionStorage.getItem("ColName") || "",
+  logId: window.sessionStorage.getItem("logId")||"",
 }
 
 const mutations = {
@@ -11,6 +12,10 @@ const mutations = {
   setCurrentCol(state, value) {
     sessionStorage.setItem("ColName", value)
     state.ColName = value
+  },
+  setLogId(state,value){
+    sessionStorage.setItem("logId",value)
+    state.logId = value;
   }
 }
 
@@ -20,7 +25,10 @@ const getters = {
   },
   getCurrentCol(state) {
     return state.ColName
-  }
+  },
+  getLogId(){
+    return state.logId;
+  },
 }
 
 const actions = {
@@ -29,6 +37,9 @@ const actions = {
   },
   setCurrentCol(context, value) {
     context.commit("setCurrentCol", value)
+  },
+  setLogId(context,value){
+    context.commit("setLogId",value)
   }
 }
 
