@@ -30,8 +30,8 @@
           :data="myData"
           empty-text="没有更多数据了！"
           :loading="this.$store.getters.getLoading"
-          :edit-config="{trigger: 'dblclick', mode: 'cell'}"
           :menu-config="tableMenu"
+          @header-cell-click="setprob"
           @header-cell-menu="cellContextMenuEvent"
           @cell-menu="cellContextMenuEvent"
           @menu-click="contextMenuClickEvent"/>
@@ -131,6 +131,9 @@ export default {
     }
   },
   methods: {
+    setprob(column) {
+      this.$store.dispatch("setCurrentCol",column.column.property)
+    },
     visibleMethod ({ type, options, column }) {
       // 示例：只有 name 列允许操作，清除按钮只能在 age 才显示
       // 显示之前处理按钮的操作权限
@@ -149,6 +152,7 @@ export default {
       return true
     },
     cellContextMenuEvent ({ column }) {
+      this.$store.dispatch("setCurrentCol",column.property)
       this.$refs.dragtable.setCurrentColumn(column)
     },
     contextMenuClickEvent ({ menu, row, column }) {
@@ -163,7 +167,8 @@ export default {
           this.$store.dispatch("setCurrentCol",column.property)
           break
         case 'outlier':
-         this.$store.dispatch("updateOpraType","outlier")
+          this.$store.dispatch("updateOpraType","outlier")
+          this.$store.dispatch("setCurrentCol",column.property)
           break
         case 'updateAttr':
           this.$store.dispatch("updateOpraType","resetColumn")
