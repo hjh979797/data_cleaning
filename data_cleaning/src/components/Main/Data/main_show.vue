@@ -183,7 +183,7 @@ export default {
           break
         case 'replace':
           this.$store.dispatch("updateOpraType","replace")
-          this.$store.dispatch("setCurrentCol",column.property)
+          this.$store.dispatch("setCurrentCol",column.title)
           break
       }
     },
