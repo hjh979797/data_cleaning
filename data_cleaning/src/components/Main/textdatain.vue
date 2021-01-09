@@ -19,7 +19,10 @@
           :on-success="handleSuccess"
           :headers="myHeader"
           :data="myData"
-          :on-error="handleError">
+          :on-error="handleError"
+          :multiple="false"
+          :limit="1"
+          :on-exceed="handleExceed">
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
           <div class="el-upload__tip" slot="tip" style="text-align: left">只能上传jpg/png文件，且不超过500kb</div>
@@ -236,6 +239,17 @@ export default {
         this.textdatainFormRules.upload = [{ required: true, message: '请上传文件', trigger: 'change' }]
       }
       this.fileType = ""
+    },
+    handleExceed(files, fileList) {
+      this.$alert('上传文件数量超出限制', '错误信息', {
+        confirmButtonText: '确定',
+        callback: action => {
+          // this.$message({
+          //   type: 'info',
+          //   message: `action: ${ action }`
+          // });
+        }
+      });
     }
   },
   computed: {

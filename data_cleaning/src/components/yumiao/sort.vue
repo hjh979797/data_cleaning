@@ -51,7 +51,7 @@ export default{
                 this.str+=",";
             }
             flag=1;
-            this.str+=tempcol[i].field;
+            this.str+=tempcol[i].title;
         }
         this.columnnames=this.str.split(",").map(function(item){
             return{val: item};

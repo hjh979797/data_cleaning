@@ -7,18 +7,21 @@
 
           <!-- 头部区域 -->
           <el-header class="home-header">
-            <div>
+            <div class="title">
               <img src="../../../assets/clean_logo.png" alt=""/>
-              <span> 数据清洗平台 </span>
+              <el-button type="text" @click="goBack"> 数据清洗平台 </el-button>
             </div>
-            <el-button
-              type="text"
-              size="medium"
-              v-model="this.$store.getters.getMail"
-              icon="iconfont icon-user"
-              class="info"
-              style="color: #fff"
-              >{{ ' ' + this.$store.getters.getMail }}</el-button>
+            <div class="btns">
+              <el-button
+                type="text"
+                size="medium"
+                v-model="this.$store.getters.getMail"
+                icon="iconfont icon-user"
+                class="info"
+                style="color: #fff"
+                >{{ ' ' + this.$store.getters.getMail }}</el-button>
+              <el-button type="danger" size="small" class="exit" @click="exit">退出</el-button>
+            </div>
           </el-header>
           
           <el-main  class="home-main">
@@ -47,6 +50,19 @@ export default {
   created() {
     console.log("数据ID： " + this.$route.params.dataid)
   },
+  methods: {
+    exit(){
+      // 退出
+      console.log("退出")
+      window.sessionStorage.clear()
+      this.$router.push('/login')
+    },
+    goBack(){
+      // 
+      console.log("返回首页")
+      this.$router.push('/home')
+    }
+  }
 }
 </script>
 
@@ -100,13 +116,20 @@ export default {
   img {
     height: 50%;
   }
-  > div {
+  .title {
     display: flex;
     align-items: center;
     height: 100%;
-    span {
+    .el-button {
       margin-left: 15px;
+      color: #fff;
+      font-size: 25px;
     }
+  }
+  .btns {
+    display: flex;
+    align-items: center;
+    height: 100%;
   }
 }
 .home-main {

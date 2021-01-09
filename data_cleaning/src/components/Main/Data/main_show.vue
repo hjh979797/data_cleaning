@@ -132,7 +132,7 @@ export default {
   },
   methods: {
     setprob(column) {
-      this.$store.dispatch("setCurrentCol",column.column.property)
+      this.$store.dispatch("setCurrentCol",column.column.title)
     },
     visibleMethod ({ type, options, column }) {
       // 示例：只有 name 列允许操作，清除按钮只能在 age 才显示
@@ -152,7 +152,7 @@ export default {
       return true
     },
     cellContextMenuEvent ({ column }) {
-      this.$store.dispatch("setCurrentCol",column.property)
+      this.$store.dispatch("setCurrentCol",column.title)
       this.$refs.dragtable.setCurrentColumn(column)
     },
     contextMenuClickEvent ({ menu, row, column }) {
@@ -160,24 +160,24 @@ export default {
       switch (menu.code) {
         case 'sortData':
           this.$store.dispatch("updateOpraType", "sort")
-          this.$store.dispatch("setCurrentCol",column.property)
+          this.$store.dispatch("setCurrentCol",column.title)
           break
         case 'nullFull':
           this.$store.dispatch("updateOpraType", "nullFull")
-          this.$store.dispatch("setCurrentCol",column.property)
+          this.$store.dispatch("setCurrentCol",column.title)
           break
         case 'outlier':
           this.$store.dispatch("updateOpraType","outlier")
-          this.$store.dispatch("setCurrentCol",column.property)
+          this.$store.dispatch("setCurrentCol",column.title)
           break
         case 'updateAttr':
           this.$store.dispatch("updateOpraType","resetColumn")
-          this.$store.dispatch("setCurrentCol",column.property)
+          this.$store.dispatch("setCurrentCol",column.title)
           console.log(column.property)
           break
         case 'filter':
           this.$store.dispatch("updateOpraType","filter")
-          this.$store.dispatch("setCurrentCol",column.property)
+          this.$store.dispatch("setCurrentCol",column.title)
           break
       }
     },

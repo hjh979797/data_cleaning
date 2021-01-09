@@ -25,7 +25,8 @@ const mutations = {
     state.datalist = datas
     for (var key in datalist.tableColumns) {
       datalist.tableColumns[key].flag = false
-      console.log("加入flag结果: " + datalist.tableColumns[key])
+      console.log("加入flag结果: ")
+      console.log(datalist.tableColumns[key])
     }
     sessionStorage.setItem("datacol", JSON.stringify(datalist.tableColumns))
     state.datacol = JSON.stringify(datalist.tableColumns)
@@ -114,7 +115,7 @@ const getters = {
     for(var col in cols) {
       let name = cols[col].cloumnName
       let dic = {field: name}
-      dic['title'] = name
+      dic['title'] = name.substring(1,name.length)
       dic['width'] = "auto"
       dic['minWidth'] = "100px"
       dic['resizable'] = true
