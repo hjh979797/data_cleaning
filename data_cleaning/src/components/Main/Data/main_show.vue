@@ -70,7 +70,8 @@ export default {
             ],
             [
               { code: 'updateAttr', name: '修改字段属性', prefixIcon: 'fa fa-print', visible: true, disabled: false },
-              { code: 'filter', name: '筛选', prefixIcon: 'fa fa-download', visible: true, disabled: false }
+              { code: 'filter', name: '筛选', prefixIcon: 'fa fa-download', visible: true, disabled: false },
+              { code: 'replace', name: '替换', prefixIcon: 'fa fa-download', visible: true, disabled: false },
             ]
           ]
         },
@@ -83,7 +84,8 @@ export default {
             ],
             [
               { code: 'updateAttr', name: '修改字段属性', prefixIcon: 'fa fa-print', visible: true, disabled: false },
-              { code: 'filter', name: '筛选', prefixIcon: 'fa fa-download', visible: true, disabled: false }
+              { code: 'filter', name: '筛选', prefixIcon: 'fa fa-download', visible: true, disabled: false },
+              { code: 'replace', name: '替换', prefixIcon: 'fa fa-download', visible: true, disabled: false },
             ]
           ]
         },
@@ -179,6 +181,10 @@ export default {
           this.$store.dispatch("updateOpraType","filter")
           this.$store.dispatch("setCurrentCol",column.property)
           break
+        case 'replace':
+        this.$store.dispatch("updateOpraType","replace")
+        this.$store.dispatch("setCurrentCol",column.property)
+        break
       }
     },
     setDragTable() {
