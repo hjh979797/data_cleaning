@@ -75,22 +75,38 @@ export default {
           this.$refs.mark.$el.querySelector('input').focus();
         }, 3);
       }else if(command=='del'){
-          this.$http({
-            url: "/project/deleteProject",
-            method: "post",
-            params: {
-              "projectId": this.item.projectId
-            },
-            headers: {
-              Authorization: this.$store.getters.getToken
-            },
-          }).then(res => {
-            console.log("删除的结果返回： ")
-            console.log(res)
-          }, error => {
-            console.log("错误；", error.message)
-          })
-          this.$store.dispatch("delPro", this.item.projectId)
+          this.$confirm('此操作将永久删除该项目, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+            center: true
+          }).then(() => {
+            this.$http({
+              url: "/project/deleteProject",
+              method: "post",
+              params: {
+                "projectId": this.item.projectId
+              },
+              headers: {
+                Authorization: this.$store.getters.getToken
+              },
+            }).then(res => {
+              console.log("删除的结果返回： ")
+              console.log(res)
+            }, error => {
+              console.log("错误；", error.message)
+            })
+            this.$store.dispatch("delPro", this.item.projectId)
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
       }
     },
     loseblur:function(){

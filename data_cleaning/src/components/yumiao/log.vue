@@ -55,6 +55,12 @@ export default {
                 }
             }).then(res=>{
                 this.loglist=res.data.data;
+                if(res.data.data.length===0){
+                  this.$message({
+                    message: '当前没有日志信息',
+                    type: 'warning'
+                  });
+                }
             },error=>{
                 console.log("错误：",error.message)
             })
