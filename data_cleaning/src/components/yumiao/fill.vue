@@ -49,21 +49,23 @@ export default {
           value: 'median',
           label: '中位数填充'
         }, {
-          value: '选项2',
+          value: 'min',
           label: '最小值填充'
         },{
-          value: '选项3',
+          value: 'max',
           label: '最大值填充'
         }, {
-          value: '选项4',
+          value: 'mode',
           label: '众数填充'
-        }, {
-          value: '选项5',
-          label: '插补法'
-        },{
-          value: '选项6',
-          label: '随机填充法'
-        }],
+        }, 
+        // {
+        //   value: '选项5',
+        //   label: '插补法'
+        // },{
+        //   value: '选项6',
+        //   label: '随机填充法'
+        // }
+        ],
         options2: [{
           value: '选项1',
           label: '拉格朗日插值法'
@@ -137,7 +139,7 @@ export default {
                 Authorization: this.$store.getters.getToken
             }
         }).then(res=>{
-            console.log("排序结果： " + res);
+            console.log(res);
             this.$store.dispatch("updateDataList", res.data.data)
         },error=>{
             console.log("错误：",error.message)
