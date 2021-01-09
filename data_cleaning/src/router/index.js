@@ -47,16 +47,23 @@ const router = new Router({
   ]
 })
 
-// //挂载路由导航守卫
-// router.beforeEach((to, from, next) => {
-//   // to: 将访问路径
-//   // from: 从哪个路径跳转
-//   // next: 放行
-//   if(to.path === '/login' || to.path === '/regist') return next(); //直接放行
-//   // 获取token
-//   const tokenStr = window.sessionStorage.getItem('token')
-//   if(!tokenStr) return next('/login') //强制回到login
-//   next() //直接放行
-// })
+//挂载路由导航守卫
+router.beforeEach((to, from, next) => {
+  // to: 将访问路径
+  // from: 从哪个路径跳转
+  // next: 放行
+  if(to.path === '/login' || to.path === '/regist') return next(); //直接放行
+  // 获取token
+  const tokenStr = window.sessionStorage.getItem('token')
+  if(!tokenStr) {
+    Vue.prototype.$notify({
+      title: '失效',
+      message: '登录信息失效，请重新登录',
+      type: 'warning'
+    });
+    return next('/login') //强制回到login
+  }
+  next() //直接放行
+})
 
 export default router
