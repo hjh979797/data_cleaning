@@ -182,9 +182,9 @@ export default {
           this.$store.dispatch("setCurrentCol",column.property)
           break
         case 'replace':
-        this.$store.dispatch("updateOpraType","replace")
-        this.$store.dispatch("setCurrentCol",column.property)
-        break
+          this.$store.dispatch("updateOpraType","replace")
+          this.$store.dispatch("setCurrentCol",column.property)
+          break
       }
     },
     setDragTable() {
@@ -279,6 +279,10 @@ export default {
     },
     filter(){
       this.$store.dispatch("updateOpraType","filter")
+    },
+    replace(){
+      this.$store.dispatch("getColName", this.currentCol)
+      this.$store.dispatch("updateOpraType","replace")
     }
   }
 }

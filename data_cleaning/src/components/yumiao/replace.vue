@@ -2,12 +2,11 @@
     <div>
         <div>
             <label for="oldvalue">将</label>
-            <!-- <input placeholder="columnname" :disabled="true" style="margin-left:10%"> -->
-            <input v-model="oldvalue" placeholder="请输入需要替换的值" :disabled="true" style="margin-left:10%">
+            <input id="oldvalue" v-model="oldvalue" placeholder="请输入需要替换的值" style="margin-left:20%">
         </div>
         <div>
             <label for="newvalue">替换为</label>
-            <input id="newvalue" v-model="newvalue" placeholder="请输入替换值" style="margin-left:15%">
+            <input id="newvalue" v-model="newvalue" placeholder="请输入替换值" style="margin-left:10%">
         </div>
         <div>
             <el-button type="success" @click="replace" style="margin-left:30%">确定</el-button>
@@ -84,10 +83,11 @@ export default {
 </script>
 <style scoped>
 div{
-    margin: 8px;
+    margin: 10px;
 }
 input{
     width:200px;
     height: 35px;
+    
 }
 </style>
