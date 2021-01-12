@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import opra from './modules/opra'
 import proInfo from './modules/proInfo'
 import userInfo from './modules/userInfo'
+import utils from './modules/utils'
 
 Vue.use(Vuex)
 
@@ -26,6 +27,7 @@ export const store = new Vuex.Store({
   modules: {
     opra,
     proInfo,
-    userInfo
+    userInfo,
+    utils
   }
 })

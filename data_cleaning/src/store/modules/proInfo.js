@@ -112,16 +112,37 @@ const getters = {
     // minWidth 最小宽度
     let tableColumn = []
     let cols = JSON.parse(state.datacol)
+    let dic = { width: "60" }
+    dic['type'] = "checkbox"
+    dic['resizable'] = false
+    dic['fixed'] = "left"
+    tableColumn.push(dic)
     for(var col in cols) {
       let name = cols[col].cloumnName
-      let dic = {field: name}
-      dic['title'] = name.substring(1,name.length)
-      dic['width'] = "auto"
+      let dic = { width: "auto"}
+      dic['title'] = name.substring(1, name.length)
       dic['minWidth'] = "100px"
       dic['resizable'] = true
+      dic['sortable'] = true
+      dic['field'] = name
+      // dic['cellRender'] = {name: "MyHeaderSelect"}
+      // dic['slots'] = {  header: "selectOpra"}
+      dic['slots'] = {
+        header: function ({ column, columnIndex, $columnIndex, _columnIndex, $rowIndex }, h){
+        console.log("插槽内信息；")
+        console.log(column)
+        console.log(h)
+          return [
+            h('headerSelect', {
+              attrs: {
+                label: column.title,
+                column: column
+              }
+            })
+          ]
+      }}
       tableColumn.push(dic)
     }
-    // console.log(tableColumn)
     return tableColumn
     // return JSON.parse(state.datacol)
   },

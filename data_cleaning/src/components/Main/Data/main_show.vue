@@ -34,7 +34,12 @@
           @header-cell-click="setprob"
           @header-cell-menu="cellContextMenuEvent"
           @cell-menu="cellContextMenuEvent"
-          @menu-click="contextMenuClickEvent"/>
+          @menu-click="contextMenuClickEvent"
+          :sort-config="{orders: ['desc', 'asc', null]}"
+          :checkbox-config="{labelField: '_id', highlight: true, range:true}"
+          highlight-hover-row
+          highlight-current-row>
+        </vxe-grid>
       </el-main>
       <splitcolumns v-show="split_show"></splitcolumns>
 
@@ -132,6 +137,8 @@ export default {
   },
   methods: {
     setprob(column) {
+      console.log("显示列信息：")
+      console.log(this.$refs.dragtable)
       this.$store.dispatch("setCurrentCol",column.column.title)
     },
     visibleMethod ({ type, options, column }) {
