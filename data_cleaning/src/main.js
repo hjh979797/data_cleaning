@@ -30,6 +30,58 @@ Vue.prototype.$XModal = VXETable.modal
 Vue.prototype.$XPrint = VXETable.print
 Vue.prototype.$XSaveFile = VXETable.saveFile
 Vue.prototype.$XReadFile = VXETable.readFile
+import headerSelect from './components/Main/Data/headerSelect.vue'
+// import headerselect from './components/Main/Data/headerSelect.vue'
+Vue.component('headerSelect', headerSelect)
+// VXETable.renderer.add("MyHeaderSelect", {
+//   component: {
+//     headerselect
+//   },
+//   // 默认显示模板
+//   renderHeader (h, cellRender, params) {
+//     console.log(params)
+//     console.log(params.column.title)
+//     return [
+//       // <template><div>1</div></template>
+//       // h('vxe-select',{
+//       //   attrs:{
+//       //     size: "mini",
+//       //   }
+//       // },[
+//       //   h('vxe-option',{
+//       //     attrs: {
+//       //       label: "a"
+//       //     }
+//       //   })
+//       // ])
+//       // h('span',{
+//       //   attrs:{},
+//       //   domProps: {
+//       //     innerHTML: params.column.title + ''
+//       //   }
+//       // })
+//       h('headerselect',{})
+//       // h('el-dropdown',{
+//       //   attrs: {
+//       //     size: "mini",
+//       //     type: "text",
+//       //   },
+//       //   domProps: {
+//       //     innerHTML: params.column.title + ''
+//       //   }
+//       // }, [
+//       //   h('el-dropdown-menu', {
+//       //     attrs: {
+//       //       command: "a"
+//       //     },
+//       //     domProps: {
+//       //       innerHTML: 'aa'
+//       //     }
+//       //   })
+//       // ])
+//     ]
+//   }
+// })
 // 拖拽
 // import Sortable from 'sortablejs'
 // Vue.use(Sortable)
