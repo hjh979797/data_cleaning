@@ -36,7 +36,7 @@
           @cell-menu="cellContextMenuEvent"
           @menu-click="contextMenuClickEvent"
           :sort-config="{orders: ['desc', 'asc', null]}"
-          :checkbox-config="{labelField: '_id', highlight: true, range:true}"
+          :checkbox-config="{highlight: true, range:true}"
           highlight-hover-row
           highlight-current-row>
         </vxe-grid>
@@ -52,7 +52,7 @@
           :page-sizes="[10, 20, 50, 100]"
           :page-size="queryInfo.pagesize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="this.$store.getters.dataListSize">
+          :total="datalen">
         </el-pagination>
       </el-footer>
   </el-container>
@@ -117,6 +117,9 @@ export default {
     logitem,
   },
   computed: {
+    datalen(){
+      return this.$store.getters.dataListSize
+    },
     myData(){
       return this.$store.getters.getDataList
     }
@@ -127,8 +130,8 @@ export default {
     this.$store.dispatch("updateDataList", null)
     this.tableInfo.tableName = "tbl_" + this.$route.params.dataid
     this.getDataList()
-    this.$store.dispatch("updataPageSize", this.queryInfo.pagesize)
-    this.$store.dispatch("updataPage", this.queryInfo.pagenum)
+    // this.$store.dispatch("updataPageSize", this.queryInfo.pagesize)
+    // this.$store.dispatch("updataPage", this.queryInfo.pagenum)
     this.$store.dispatch("updateOpraType", "null")
     this.setDragTable();
   },
@@ -228,27 +231,41 @@ export default {
       })
     },
     async getDataList() {
-      const {data: res} =  await this.$http({
+      await this.$http({
         url:"/table/"+this.tableInfo.tableName,
         headers: {
           Authorization: this.$store.getters.getToken
         },
+        params: {
+          tableName: this.tableInfo.tableName,
+          pageSize: this.queryInfo.pagesize,
+          pageK: this.queryInfo.pagenum
+        },
         methods: "get"
+      }).then(res => {
+        if(res.data.code !== 0) return this.$message.error(" 获取数据失败 ")
+        console.log("数据的结果返回： ")
+        console.log(res.data.data)
+        this.$store.dispatch("setDataLen", res.data.data.tableLength)
+        this.$store.dispatch("updateDataList", res.data.data)
+        this.$store.dispatch("setLoad", false)
+      }, error => {
+        console.log("错误；", error.message)
       })
-      if(res.code !== 0) return this.$message.error(" 获取数据失败 ")
-      
-      this.$store.dispatch("updateDataList", res.data)
-      this.$store.dispatch("setLoad", false)
     },
     // 监听 pageSize 改变的事件
     handleSizeChange(newSize) {
       console.log(`每页 ${newSize} 条`)
-      this.$store.dispatch("updataPageSize", newSize)
+      // this.$store.dispatch("updataPageSize", newSize)
+      this.queryInfo.pagesize = newSize
+      this.getDataList()
     },
     // 监听 页码值 改变的事件
     handleCurrentChange(newPage) {
       console.log(`当前页: ${newPage}`)
-      this.$store.dispatch("updataPage", newPage)
+      // this.$store.dispatch("updataPage", newPage)
+      this.queryInfo.pagenum = newPage
+      this.getDataList()
     },
     moreopera(command){
       if(command=="splitcolumns")
