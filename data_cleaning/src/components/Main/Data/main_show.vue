@@ -252,13 +252,6 @@ export default {
       }, error => {
         console.log("错误；", error.message)
       })
-      if(res.code !== 0) return this.$message.error(" 获取数据失败 ")
-      
-      this.$store.dispatch("updateDataList", res.data)
-      this.$store.dispatch("setLogId",res.data.logId);
-      console.log("kankan")
-      console.log(this.$store.getters.getLogId);
-      this.$store.dispatch("setLoad", false)
     },
     // 监听 pageSize 改变的事件
     handleSizeChange(newSize) {
