@@ -2,8 +2,9 @@ const state = {
   prolist: window.sessionStorage.getItem("prolist") || "",
   datalist: window.sessionStorage.getItem("datalist") || "",
   datacol: window.sessionStorage.getItem("datacol") || "",
-  page: window.sessionStorage.getItem("page") || "",
-  pagesize: window.sessionStorage.getItem("pagesize") || "",
+  dataLength: window.sessionStorage.getItem("datalen") || "",
+  // page: window.sessionStorage.getItem("page") || "",
+  // pagesize: window.sessionStorage.getItem("pagesize") || "",
   loading: window.sessionStorage.getItem("loading") || ""
 }
 
@@ -25,20 +26,20 @@ const mutations = {
     state.datalist = datas
     for (var key in datalist.tableColumns) {
       datalist.tableColumns[key].flag = false
-      console.log("加入flag结果: ")
-      console.log(datalist.tableColumns[key])
+      // console.log("加入flag结果: ")
+      // console.log(datalist.tableColumns[key])
     }
     sessionStorage.setItem("datacol", JSON.stringify(datalist.tableColumns))
     state.datacol = JSON.stringify(datalist.tableColumns)
   },
-  pageFix(state, value) {
-    sessionStorage.setItem("page", value)
-    state.page = value
-  },
-  pagesizeFix(state, value) {
-    sessionStorage.setItem("pagesize", value)
-    state.pagesize = value
-  },
+  // pageFix(state, value) {
+  //   sessionStorage.setItem("page", value)
+  //   state.page = value
+  // },
+  // pagesizeFix(state, value) {
+  //   sessionStorage.setItem("pagesize", value)
+  //   state.pagesize = value
+  // },
   colstaFix(state, value) {
     let origin = JSON.parse(sessionStorage.getItem("datacol"))
     for (var key in origin) {
@@ -76,13 +77,17 @@ const mutations = {
   setLoading(state, value){
     sessionStorage.setItem("loading", value)
     state.loading = value
+  },
+  setDataLen(state, value){
+    sessionStorage.setItem("datalen", value)
+    state.dataLength = value
   }
 }
 
 const getters = {
   dataListSize(state) {
-    if(state.datalist===null) return 0
-    return JSON.parse(state.datalist).length
+    console.log(state.dataLength)
+    return parseInt(state.dataLength)
   },
   getProList(state) {
     return state.prolist
@@ -92,16 +97,17 @@ const getters = {
   },
   getDataList(state) {
     if(state.datalist===null) return []
-    let pagesize = state.pagesize
-    let page = state.page
-    let start = (page - 1) * pagesize
-    let end = page * pagesize
-    let len = JSON.parse(state.datalist).length
-    if (end > len) end = len
-    console.log("起始和终点数据： " + start + " " + end)
-    console.log("所有数据: ")
-    console.log(JSON.parse(state.datalist))
-    return JSON.parse(state.datalist).slice(start, end)
+    // let pagesize = state.pagesize
+    // let page = state.page
+    // let start = (page - 1) * pagesize
+    // let end = page * pagesize
+    // let len = JSON.parse(state.datalist).length
+    // if (end > len) end = len
+    // console.log("起始和终点数据： " + start + " " + end)
+    // console.log("所有数据: ")
+    // console.log(JSON.parse(state.datalist))
+    // return JSON.parse(state.datalist).slice(start, end)
+    return JSON.parse(state.datalist)
   },
   getDataCol(state) {
     if (state.datacol === null) return []
@@ -129,9 +135,9 @@ const getters = {
       // dic['slots'] = {  header: "selectOpra"}
       dic['slots'] = {
         header: function ({ column, columnIndex, $columnIndex, _columnIndex, $rowIndex }, h){
-        console.log("插槽内信息；")
-        console.log(column)
-        console.log(h)
+        // console.log("插槽内信息；")
+        // console.log(column)
+        // console.log(h)
           return [
             h('headerSelect', {
               attrs: {
@@ -178,6 +184,9 @@ const actions = {
   },
   setLoad(context, value) {
     context.commit("setLoading", value)
+  },
+  setDataLen(context, value) {
+    context.commit("setDataLen", value)
   }
 }
 
