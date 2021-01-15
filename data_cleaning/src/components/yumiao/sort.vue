@@ -56,7 +56,6 @@ export default{
         this.columnnames=this.str.split(",").map(function(item){
             return{val: item};
         });
-        console.log(this.columnnames)
   
       this.sortrules=this.rules.split(",").map(function(item){
         return{val: item};
@@ -65,74 +64,72 @@ export default{
     },
     methods: {
       getsort(){
-        var logid=0;
+          var rules = "";
+        var flag=0;
+        for(var i = 0; i < this.mylist.length;i++)
+        {
+            if(flag==1)
+            {
+                rules+=",";
+            }
+            flag=1;
+            var columnnametemp=this.mylist[i].value;
+            var ruletemp=this.mylist[i].rule;
+            if(columnnametemp=="")
+            { 
+                alert("请选择排序字段");
+                return 0;
+                
+            }
+            if(ruletemp=="")
+            {
+                alert("请选择排序规则");
+                return 0;
+            }
+            else if(ruletemp=="升序")
+            {
+                ruletemp="asc";    
+            }
+            else if(ruletemp=="降序")
+            {
+                ruletemp="desc";    
+            }
+            rules+=columnnametemp+","+ruletemp;
+        }
+        var logid=this.$store.getters.getLogId;
         this.$http({
-            url:'/table/'+this.tablename+'/logs',
+            url:'/table/'+this.tablename+'/sort',
             method:"get",
             params:{
                 tableName: this.tablename,
+                rules: rules,
+                logId:logid,
             },
             headers:{
                 Authorization: this.$store.getters.getToken
             }
         }).then(res=>{
-            if(res.data.data.length!=0)
-            {
-                logid=res.data.data[res.data.data.length-1].logId;
-            }
-            var rules = "";
-            var flag=0;
-            for(var i = 0; i < this.mylist.length;i++)
-            {
-                if(flag==1)
-                {
-                    rules+=",";
-                }
-                flag=1;
-                var columnnametemp=this.mylist[i].value;
-                var ruletemp=this.mylist[i].rule;
-                if(columnnametemp=="")
-                { 
-                    alert("请选择排序字段");
-                    return 0;
-                    
-                }
-                if(ruletemp=="")
-                {
-                    alert("请选择排序规则");
-                    return 0;
-                }
-                else if(ruletemp=="升序")
-                {
-                    ruletemp="asc";    
-                }
-                else if(ruletemp=="降序")
-                {
-                    ruletemp="desc";    
-                }
-                rules+=columnnametemp+","+ruletemp;
-            }
             this.$http({
-                url:'/table/'+this.tablename+'/sort',
-                method:"get",
-                params:{
-                    tableName: this.tablename,
-                    rules: rules,
-                    logId:logid,
+                url:"/table/"+this.tablename,
+                headers: {
+                Authorization: this.$store.getters.getToken
                 },
-                headers:{
-                    Authorization: this.$store.getters.getToken
-                }
-            }).then(res=>{
-                console.log("排序结果： " + res);
-                console.log(res)
+                params: {
+                tableName: this.tablename,
+                pageSize: this.$store.getters.getPageSize,
+                pageK: this.$store.getters.getPageK,
+                },
+                methods: "get"
+            }).then(res => {
                 this.$store.dispatch("updateDataList", res.data.data)
-            },error=>{
-                console.log("错误：",error.message)
-            });
+                this.$store.dispatch("setLogId",res.data.data.logId)
+            }, error => {
+                console.log("错误；", error.message)
+            })
         },error=>{
             console.log("错误：",error.message)
         });
+        
       },
       add(){
         var index=this.mylist.length;

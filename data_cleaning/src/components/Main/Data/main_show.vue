@@ -104,9 +104,9 @@ export default {
       queryInfo: {
         query: '',
         // 当前页数
-        pagenum: 1,
+        pagenum: this.$store.getters.getPageK,
         // 当前每页显示多少数据
-        pagesize: 10
+        pagesize: this.$store.getters.getPageSize
       },
       main_show:true,
       split_show:false,
@@ -129,9 +129,9 @@ export default {
     this.$store.dispatch("setLoad", true)
     this.$store.dispatch("updateDataList", null)
     this.tableInfo.tableName = "tbl_" + this.$route.params.dataid
+    this.$store.dispatch("updataPageSize", 10)
+    this.$store.dispatch("updataPage", 1)
     this.getDataList()
-    // this.$store.dispatch("updataPageSize", this.queryInfo.pagesize)
-    // this.$store.dispatch("updataPage", this.queryInfo.pagenum)
     this.$store.dispatch("updateOpraType", "null")
     this.setDragTable();
   },
@@ -248,6 +248,7 @@ export default {
         console.log(res.data.data)
         this.$store.dispatch("setDataLen", res.data.data.tableLength)
         this.$store.dispatch("updateDataList", res.data.data)
+        this.$store.dispatch("setLogId",res.data.data.logId)
         this.$store.dispatch("setLoad", false)
       }, error => {
         console.log("错误；", error.message)
@@ -256,14 +257,14 @@ export default {
     // 监听 pageSize 改变的事件
     handleSizeChange(newSize) {
       console.log(`每页 ${newSize} 条`)
-      // this.$store.dispatch("updataPageSize", newSize)
+      this.$store.dispatch("updataPageSize", newSize)
       this.queryInfo.pagesize = newSize
       this.getDataList()
     },
     // 监听 页码值 改变的事件
     handleCurrentChange(newPage) {
       console.log(`当前页: ${newPage}`)
-      // this.$store.dispatch("updataPage", newPage)
+      this.$store.dispatch("updataPage", newPage)
       this.queryInfo.pagenum = newPage
       this.getDataList()
     },

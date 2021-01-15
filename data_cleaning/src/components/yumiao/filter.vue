@@ -84,6 +84,7 @@ export default {
         this.columnname=this.$store.getters.getCurrentCol;
         var tempdata = this.$store.getters.getData;
         this.setOptions(tempdata);
+        console.log(this.columnname);
     },
   computed:{
       mycolumnname(){
@@ -105,18 +106,18 @@ export default {
   methods:{
     setOptions:function(){
       var tempdata = this.$store.getters.getData;
+      var tempcolumn = '_'+this.columnname;
       var tempoption=new Set;
       this.options.splice(0,this.options.length);
       for(let i=0;i<tempdata.length;i++)
       {
-        tempoption.add(tempdata[i][this.columnname]);
+        tempoption.add(tempdata[i][tempcolumn]);
       }
       for (let [key, value] of tempoption.entries()){
         this.options.push({value,value})
       }
     },
     getFilter:function(){
-      var logid=0;
       var typetemp;
       var str="";
       if(this.radio=='1')
@@ -163,22 +164,8 @@ export default {
           typetemp='notEmpty';
         }
       }
-      console.log(str);
-      console.log(this.columnname)
-      this.$http({
-          url:'/table/'+this.tablename+'/logs',
-          method:"get",
-          params:{
-              tableName: this.tablename,
-          },
-          headers:{
-              Authorization: this.$store.getters.getToken
-          }
-      }).then(res=>{
-          if(res.data.data.length!=0)
-            logid=res.data.data[res.data.data.length-1].logId;
-          console.log(logid)
-          this.$http({
+        var logid=this.$store.getters.getLogId;
+        this.$http({
           url:'/table/'+this.tablename+'/filter',
           method:"get",
           params:{
@@ -192,18 +179,26 @@ export default {
               Authorization: this.$store.getters.getToken
           }
         }).then(res=>{
-          console.log("filter")
-          console.log(res.data.data);
-          this.$store.dispatch("updateDataList", res.data.data)
-          alert("筛选完成");
+            this.$http({
+                url:"/table/"+this.tablename,
+                headers: {
+                Authorization: this.$store.getters.getToken
+                },
+                params: {
+                tableName: this.tablename,
+                pageSize: this.$store.getters.getPageSize,
+                pageK: this.$store.getters.getPageK,
+                },
+                methods: "get"
+            }).then(res => {
+                this.$store.dispatch("updateDataList", res.data.data)
+                this.$store.dispatch("setLogId",res.data.data.logId)
+            }, error => {
+                console.log("错误；", error.message)
+            })
         },error=>{
             console.log("错误：",error.message)
-            alert("错误：",error.message)
         });
-      },error=>{
-          console.log("错误：",error.message)
-          alert("错误：",error.message)
-      });
     }
   }
 }

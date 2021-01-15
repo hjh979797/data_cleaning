@@ -67,46 +67,44 @@ export default {
     },
     methods:{
         reset:function(){
-            var logid=0;
-            this.$http({
-            url:'/table/'+this.tablename+'/logs',
+
+        var logid=this.$store.getters.getLogId;
+        this.$http({
+            url:'/table/'+this.tablename+'/column',
             method:"get",
             params:{
                 tableName: this.tablename,
+                columnName: this.columnname,
+                newColumnName:this.newcolumnname,
+                columnType:this.value,
+                // columnLength:this.columnLength,
+                logId: logid,
             },
-            headers:{
+            headers: {
                 Authorization: this.$store.getters.getToken
-            }
-            }).then(res=>{
-                if(res.data.data.length!=0)
-                    logid=res.data.data[res.data.data.length-1].logId;
-                this.$http({
-                url:'/table/'+this.tablename+'/column',
-                method:"get",
-                params:{
-                    tableName: this.tablename,
-                    columnName: this.columnname,
-                    newColumnName:this.newcolumnname,
-                    columnType:this.value,
-                    columnLength:this.columnLength,
-                    logId: logid,
                 },
-                headers:{
-                    Authorization: this.$store.getters.getToken
-                }
-                }).then(res=>{
-                    console.log("resetColumnname")
-                    console.log(res.data.data);
-                    this.$store.dispatch("updateDataList", res.data.data)
-                    alert("重命名完成");
-                },error=>{
-                    console.log("错误：",error.message)
-                    alert("错误：",error.message)
-                });
-            },error=>{
-                console.log("错误：",error.message)
-                alert("错误：",error.message)
-            });
+        }).then(res=>{
+            this.$http({
+                url:"/table/"+this.tablename,
+                headers: {
+                Authorization: this.$store.getters.getToken
+                },
+                params: {
+                tableName: this.tablename,
+                pageSize: this.$store.getters.getPageSize,
+                pageK: this.$store.getters.getPageK,
+                },
+                methods: "get"
+            }).then(res => {
+                this.$store.dispatch("updateDataList", res.data.data)
+                console.log(res);
+                this.$store.dispatch("setLogId",res.data.data.logId)
+            }, error => {
+                console.log("错误；", error.message)
+            })
+        },error=>{
+            console.log("错误：",error.message)
+        });
         }
     }
 

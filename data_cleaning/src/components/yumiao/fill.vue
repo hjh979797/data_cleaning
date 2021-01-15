@@ -111,21 +111,8 @@ export default {
           value=this.value2;
           break;
       }
-      this.$http({
-          url:'/table/'+this.tablename+'/logs',
-          method:"get",
-          params:{
-              tableName: this.tablename,
-          },
-          headers:{
-              Authorization: this.$store.getters.getToken
-          }
-      }).then(res=>{
-          if(res.data.data.length!=0)
-          {
-              logid=res.data.data[res.data.data.length-1].logId;
-          }
-          this.$http({
+       var logid=this.$store.getters.getLogId;
+       this.$http({
             url:'/table/'+this.tablename+'/fill',
             method:"get",
             params:{
@@ -139,14 +126,27 @@ export default {
                 Authorization: this.$store.getters.getToken
             }
         }).then(res=>{
-            console.log(res);
-            this.$store.dispatch("updateDataList", res.data.data)
+            this.$http({
+                url:"/table/"+this.tablename,
+                headers: {
+                Authorization: this.$store.getters.getToken
+                },
+                params: {
+                tableName: this.tablename,
+                pageSize: this.$store.getters.getPageSize,
+                pageK: this.$store.getters.getPageK,
+                },
+                methods: "get"
+            }).then(res => {
+                this.$store.dispatch("updateDataList", res.data.data)
+                console.log(res);
+                this.$store.dispatch("setLogId",res.data.data.logId)
+            }, error => {
+                console.log("错误；", error.message)
+            })
         },error=>{
             console.log("错误：",error.message)
         });
-      },error=>{
-          console.log("错误：",error.message)
-      });
     }
   }
 }

@@ -3,8 +3,8 @@ const state = {
   datalist: window.sessionStorage.getItem("datalist") || "",
   datacol: window.sessionStorage.getItem("datacol") || "",
   dataLength: window.sessionStorage.getItem("datalen") || "",
-  // page: window.sessionStorage.getItem("page") || "",
-  // pagesize: window.sessionStorage.getItem("pagesize") || "",
+  pageNum: window.sessionStorage.getItem("pageNum") || "",
+  pagesize: window.sessionStorage.getItem("pagesize") || "",
   loading: window.sessionStorage.getItem("loading") || ""
 }
 
@@ -32,14 +32,14 @@ const mutations = {
     sessionStorage.setItem("datacol", JSON.stringify(datalist.tableColumns))
     state.datacol = JSON.stringify(datalist.tableColumns)
   },
-  // pageFix(state, value) {
-  //   sessionStorage.setItem("page", value)
-  //   state.page = value
-  // },
-  // pagesizeFix(state, value) {
-  //   sessionStorage.setItem("pagesize", value)
-  //   state.pagesize = value
-  // },
+  pageNumFix(state, value) {
+    sessionStorage.setItem("pageNum", value)
+    state.pageNum = value
+  },
+  pagesizeFix(state, value) {
+    sessionStorage.setItem("pagesize", value)
+    state.pagesize = value
+  },
   colstaFix(state, value) {
     let origin = JSON.parse(sessionStorage.getItem("datacol"))
     for (var key in origin) {
@@ -85,6 +85,12 @@ const mutations = {
 }
 
 const getters = {
+  getPageK(state) {
+    return parseInt(state.pageNum)
+  },
+  getPageSize(state) {
+    return parseInt(state.pagesize)
+  },
   dataListSize(state) {
     console.log(state.dataLength)
     return parseInt(state.dataLength)
@@ -165,7 +171,7 @@ const actions = {
     context.commit("datalistFix", value)
   },
   updataPage(context, value) {
-    context.commit("pageFix", value)
+    context.commit("pageNumFix", value)
   },
   updataPageSize(context, value) {
     context.commit("pagesizeFix", value)

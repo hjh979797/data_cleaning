@@ -39,43 +39,41 @@ export default {
     },
     methods:{
         replace:function(){
-            var logid=0;
+        var logid=this.$store.getters.getLogId;
+        this.$http({
+        url:'/table/'+this.tablename+'/replace',
+        method:"get",
+        params:{
+            tableName: this.tablename,
+            columnName: this.columnname,
+            oldValue:this.oldvalue,
+            newValue:this.newvalue,
+            logId: logid,
+        },
+        headers:{
+            Authorization: this.$store.getters.getToken
+        }
+        }).then(res=>{
             this.$http({
-            url:'/table/'+this.tablename+'/logs',
-            method:"get",
-            params:{
-                tableName: this.tablename,
-            },
-            headers:{
+                url:"/table/"+this.tablename,
+                headers: {
                 Authorization: this.$store.getters.getToken
-            }
-            }).then(res=>{
-                if(res.data.data.length!=0)
-                    logid=res.data.data[res.data.data.length-1].logId;
-                this.$http({
-                url:'/table/'+this.tablename+'/replace',
-                method:"get",
-                params:{
-                    tableName: this.tablename,
-                    columnName: this.columnname,
-                    oldValue:this.oldvalue,
-                    newValue:this.newvalue,
-                    logId: logid,
                 },
-                headers:{
-                    Authorization: this.$store.getters.getToken
-                }
-                }).then(res=>{
-                    this.$store.dispatch("updateDataList", res.data.data)
-                    alert("替换完成");
-                },error=>{
-                    console.log("错误：",error.message)
-                    alert("错误：",error.message)
-                });
-            },error=>{
-                console.log("错误：",error.message)
-                alert("错误：",error.message)
-            });
+                params: {
+                tableName: this.tablename,
+                pageSize: this.$store.getters.getPageSize,
+                pageK: this.$store.getters.getPageK,
+                },
+                methods: "get"
+            }).then(res => {
+                this.$store.dispatch("updateDataList", res.data.data)
+                this.$store.dispatch("setLogId",res.data.data.logId)
+            }, error => {
+                console.log("错误；", error.message)
+            })
+        },error=>{
+            console.log("错误：",error.message)
+        });
         }
     }
 

@@ -25,24 +25,6 @@ export default {
         this.tablename="tbl_"+this.$route.params.dataid;
     },
     methods:{
-        // getloglist(){
-        //     this.$http({
-        //         url:'/table/'+this.tablename+'/logs',
-        //         method:"get",
-        //         params:{
-        //             tableName: this.tablename,
-        //         },
-        //         headers:{
-        //             Authorization: this.$store.getters.getToken
-        //         }
-        //     }).then(res=>{
-        //         console.log("日志结果: " + res.data);
-        //         this.loglist=res.data.data;
-        //         console.log("日志结果列表: " + this.loglist);
-        //     },error=>{
-        //         console.log("错误：",error.message)
-        //     })
-        // },
         showloglist(){
             this.$http({
                 url:'/table/'+this.tablename+'/logs',
@@ -78,29 +60,47 @@ export default {
                     Authorization: this.$store.getters.getToken
                 }
             }).then(res=>{
+                this.$http({
+                url:"/table/"+this.tablename,
+                headers: {
+                Authorization: this.$store.getters.getToken
+                },
+                params: {
+                tableName: this.tablename,
+                pageSize: this.$store.getters.getPageSize,
+                pageK: this.$store.getters.getPageK,
+                },
+                methods: "get"
+            }).then(res => {
+                this.$store.dispatch("updateDataList", res.data.data)
+                this.$store.dispatch("setLogId",res.data.data.logId)
+            }, error => {
+                console.log("错误；", error.message)
+            })
                 alert("删除成功");
-                this.$store.dispatch("updateDataList", res.data.data);
             },error=>{
                 console.log("错误：",error.message);
                 alert("错误：",error.message);
             });
             if(myindex==0)
             {
-                this.$http({
-                url:'/table/'+this.tablename,
-                method:"get",
-                params:{
-                    tableName: this.tablename,
+               this.$http({
+                url:"/table/"+this.tablename,
+                headers: {
+                Authorization: this.$store.getters.getToken
                 },
-                headers:{
-                    Authorization: this.$store.getters.getToken
-                }
-                }).then(res=>{
-                    this.$store.dispatch("updateDataList", res.data.data);
-                },error=>{
-                    console.log("错误：",error.message);
-                    alert("错误：",error.message);
-                });
+                params: {
+                tableName: this.tablename,
+                pageSize: this.$store.getters.getPageSize,
+                pageK: this.$store.getters.getPageK,
+                },
+                methods: "get"
+            }).then(res => {
+                this.$store.dispatch("updateDataList", res.data.data)
+                this.$store.dispatch("setLogId",res.data.data.logId)
+            }, error => {
+                console.log("错误；", error.message)
+            })
             }
         },
         loadlog:function(myindex){
