@@ -98,8 +98,8 @@ export default{
         }
         var logid=this.$store.getters.getLogId;
         this.$http({
-            url:'/table/'+this.tablename+'/sort',
-            method:"get",
+            url:'/mylog/log/sort',
+            method:"post",
             params:{
                 tableName: this.tablename,
                 rules: rules,

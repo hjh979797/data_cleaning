@@ -70,8 +70,8 @@ export default {
 
         var logid=this.$store.getters.getLogId;
         this.$http({
-            url:'/table/'+this.tablename+'/column',
-            method:"get",
+            url:'/mylog/log/column',
+            method:"post",
             params:{
                 tableName: this.tablename,
                 columnName: this.columnname,

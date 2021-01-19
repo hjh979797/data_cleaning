@@ -166,8 +166,8 @@ export default {
       }
         var logid=this.$store.getters.getLogId;
         this.$http({
-          url:'/table/'+this.tablename+'/filter',
-          method:"get",
+          url:'/mylog/log/filter',
+          method:"post",
           params:{
               tableName: this.tablename,
               columnName: this.columnname,

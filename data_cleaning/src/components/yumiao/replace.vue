@@ -41,8 +41,8 @@ export default {
         replace:function(){
         var logid=this.$store.getters.getLogId;
         this.$http({
-        url:'/table/'+this.tablename+'/replace',
-        method:"get",
+        url:'/mylog/log//replace',
+        method:"post",
         params:{
             tableName: this.tablename,
             columnName: this.columnname,

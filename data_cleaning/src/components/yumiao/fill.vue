@@ -113,8 +113,8 @@ export default {
       }
        var logid=this.$store.getters.getLogId;
        this.$http({
-            url:'/table/'+this.tablename+'/fill',
-            method:"get",
+            url:'/mylog/log/fill',
+            method:"post",
             params:{
                 tableName: this.tablename,
                 columnName: this.columnname,
@@ -126,6 +126,14 @@ export default {
                 Authorization: this.$store.getters.getToken
             }
         }).then(res=>{
+            if(res.data.code!==0){
+              alert(res.data.msg);
+              return ;
+            }
+            if(res.data.code!=0){
+              alert(res.data.msg);
+              return ;
+            }
             this.$http({
                 url:"/table/"+this.tablename,
                 headers: {
@@ -138,6 +146,10 @@ export default {
                 },
                 methods: "get"
             }).then(res => {
+              if(res.data.code!=0){
+              alert(res.data.msg);
+              return ;
+            }
                 this.$store.dispatch("updateDataList", res.data.data)
                 console.log(res);
                 this.$store.dispatch("setLogId",res.data.data.logId)

@@ -27,7 +27,7 @@ export default {
     methods:{
         showloglist(){
             this.$http({
-                url:'/table/'+this.tablename+'/logs',
+                url:'/mylog/logs',
                 method:"get",
                 params:{
                     tableName: this.tablename,
@@ -50,8 +50,8 @@ export default {
         deletelog:function(myindex){
             var deletelogid = this.loglist[myindex].logId;
             this.$http({
-                url:'/table/'+this.tablename+'/deleteLog',
-                method:"post",
+                url:'/mylog/logs',
+                method:"delete",
                 data:{
                     tableName: this.tablename,
                     logId:deletelogid,
@@ -112,21 +112,22 @@ export default {
             if(logid==0)
             {
                 this.$http({
-                url:'/table/'+this.tablename,
-                method:"get",
-                params:{
-                    tableName: this.tablename,
+                url:"/table/"+this.tablename,
+                headers: {
+                Authorization: this.$store.getters.getToken
                 },
-                headers:{
-                    Authorization: this.$store.getters.getToken
-                }
-                }).then(res=>{
-                    alert("跳转成功");
-                    this.$store.dispatch("updateDataList", res.data.data);
-                },error=>{
-                    console.log("错误：",error.message);
-                    alert("错误：",error.message);
-                });
+                params: {
+                tableName: this.tablename,
+                pageSize: this.$store.getters.getPageSize,
+                pageK: this.$store.getters.getPageK,
+                },
+                methods: "get"
+            }).then(res => {
+                this.$store.dispatch("updateDataList", res.data.data)
+                this.$store.dispatch("setLogId",res.data.data.logId)
+            }, error => {
+                console.log("错误；", error.message)
+            })
             }
             else
             {
@@ -136,13 +137,16 @@ export default {
                 params:{
                     tableName: this.tablename,
                     logId:logid,
+                     pageSize: this.$store.getters.getPageSize,
+                pageK: this.$store.getters.getPageK,
                 },
                 headers:{
                     Authorization: this.$store.getters.getToken
                 }
                 }).then(res=>{
                     alert("跳转成功");
-                    this.$store.dispatch("updateDataList", res.data.data);
+                     this.$store.dispatch("updateDataList", res.data.data)
+                this.$store.dispatch("setLogId",res.data.data.logId)
                 },error=>{
                     console.log("错误：",error.message);
                     alert("错误：",error.message);
