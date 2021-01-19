@@ -22,10 +22,11 @@
           :on-error="handleError"
           :multiple="false"
           :limit="1"
-          :on-exceed="handleExceed">
+          :on-exceed="handleExceed"
+          :beforeUpload="beforeAvatarUpload">
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div class="el-upload__tip" slot="tip" style="text-align: left">只能上传jpg/png文件，且不超过500kb</div>
+          <div class="el-upload__tip" slot="tip" style="text-align: left">只能上传csv/xlsx/txt等文件</div>
         </el-upload>
       </el-form-item>
       <div class="in_box">
@@ -250,6 +251,17 @@ export default {
           // });
         }
       });
+    },
+    beforeAvatarUpload(file) {                 
+        var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)  
+        const isLt2M = file.size / 1024 / 1024 / 1024< 10
+        if(!isLt2M) {
+            this.$message({
+                message: '上传文件大小不能超过 10GB!',
+                type: 'warning'
+            });
+        }
+        return isLt2M
     }
   },
   computed: {
